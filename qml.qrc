@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>LogicalNotItem.qml</file>
+    </qresource>
+</RCC>
