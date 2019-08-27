@@ -10,11 +10,7 @@ Window {
     height: 480
     title: qsTr("Hello World")
 
-
-    LogicalNotItem
-    {
-        id: logicalNotItem
-    }
+    property var logicalItems: []
 
     Button
     {
@@ -23,7 +19,8 @@ Window {
         onClicked:
         {
             var component = Qt.createComponent("LogicalNotItem.qml");
-            component.createObject(mainWindow);
+            var item = component.createObject(mainWindow);
+            logicalItems.push(item)
         }
     }
 
@@ -33,14 +30,17 @@ Window {
 
         width: 640
         height: 480
+        z: 1
 
         property var activeItem: null
         property var activeArea: null
+        property var endItem: null
 
-        function setActiveItem(item, area)
+        function setActiveItem(item, area, last)
         {
             activeItem = item
             activeArea = area
+            endItem = last
         }
 
         function clear()
@@ -59,7 +59,10 @@ Window {
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(activeItem.startDrawPos.x, activeItem.startDrawPos.y);
-            ctx.lineTo(activeArea.mouseX + activeItem.startDrawPos.x, activeArea.mouseY + activeItem.startDrawPos.y)
+            if (endItem)
+                ctx.lineTo(endItem.inConPos.x, endItem.inConPos.y + endItem.conSize / 2)
+            else
+                ctx.lineTo(activeArea.mouseX + activeItem.startDrawPos.x, activeArea.mouseY + activeItem.startDrawPos.y)
             ctx.stroke();
 
             canvas.requestPaint();

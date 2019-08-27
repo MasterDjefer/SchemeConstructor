@@ -6,6 +6,8 @@ Rectangle
 
     property bool isMoveable: false
     property var startPos: {"x": 0, "y": 0}
+    property var inConPos: {"x": x + inCon.width - inCon.width / 2, "y": y + height / 2 - inCon.height / 2}
+    property int conSize: 20
 
     width: 100
     height: 100
@@ -22,6 +24,11 @@ Rectangle
         height: container.height - container.border.width * 2
         source: "qrc:/logicalNot.png"
         anchors.centerIn: parent
+    }
+
+    Component.onCompleted:
+    {
+        canvas.setActiveItem(outCon, outConArea, null)
     }
 
     MouseArea
@@ -50,6 +57,8 @@ Rectangle
             {
                 container.x += mouseX - startPos.x
                 container.y += mouseY - startPos.y
+
+                canvas.drawLine()
             }
         }
     }
@@ -60,8 +69,8 @@ Rectangle
 
         y: container.height / 2 - height / 2
 
-        width: 20
-        height: 20
+        width: conSize
+        height: conSize
         color: "white"
         radius: 100
         border
@@ -86,13 +95,8 @@ Rectangle
         x: container.width - width
         y: container.height / 2 - height / 2
 
-        function f()
-        {
-
-        }
-
-        width: 20
-        height: 20
+        width: conSize
+        height: conSize
         color: "white"
         radius: 100
         border
@@ -119,12 +123,30 @@ Rectangle
             onPressed:
             {
                 isMoveable = true
-                canvas.setActiveItem(outCon, outConArea)
+                canvas.setActiveItem(outCon, outConArea, null)
             }
             onReleased:
             {
+                var isConnected = false
+                for (var i = 0; i < mainWindow.logicalItems.length; ++i)
+                {
+                    var item = mainWindow.logicalItems[i]
+                    var releaseObj = {"x": container.x + mouseX + container.width, "y": container.y + mouseY + container.height / 2}
+
+                    if (releaseObj.x >= item.inConPos.x && releaseObj.x <= item.inConPos.x + inCon.width &&
+                        releaseObj.y >= item.inConPos.y && releaseObj.y <= item.inConPos.y + inCon.height &&
+                        container !== item)
+                    {
+                        isConnected = true
+                        canvas.setActiveItem(outCon, outConArea, item)
+                        canvas.drawLine()
+                    }
+                }
+
                 isMoveable = false
-                canvas.clear()
+
+                if (!isConnected)
+                    canvas.clear()
             }
 
             onPositionChanged:
