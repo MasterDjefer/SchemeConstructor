@@ -58,7 +58,7 @@ Rectangle
                 container.x += mouseX - startPos.x
                 container.y += mouseY - startPos.y
 
-                canvas.drawLine()
+                canvas.redraw()
             }
         }
     }
@@ -89,7 +89,6 @@ Rectangle
     {
         id: outCon
 
-        property bool isMoveable: false
         property var startDrawPos: {"x": container.x + container.width - width / 2, "y": container.y + container.height / 2}
 
         x: container.width - width
@@ -123,11 +122,10 @@ Rectangle
             onPressed:
             {
                 isMoveable = true
-                canvas.setActiveItem(outCon, outConArea, null)
+                canvas.setActiveItem(outCon, outConArea)
             }
             onReleased:
             {
-                var isConnected = false
                 for (var i = 0; i < mainWindow.logicalItems.length; ++i)
                 {
                     var item = mainWindow.logicalItems[i]
@@ -137,22 +135,22 @@ Rectangle
                         releaseObj.y >= item.inConPos.y && releaseObj.y <= item.inConPos.y + inCon.height &&
                         container !== item)
                     {
-                        isConnected = true
                         canvas.setActiveItem(outCon, outConArea, item)
-                        canvas.drawLine()
+                        canvas.addLine(outCon, item)
                     }
                 }
 
                 isMoveable = false
-
-                if (!isConnected)
-                    canvas.clear()
+                canvas.redraw()
             }
 
             onPositionChanged:
             {
                 if (isMoveable)
+                {
+                    canvas.removeLine(outCon)
                     canvas.drawLine()
+                }
             }
         }
     }
