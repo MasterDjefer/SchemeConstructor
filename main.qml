@@ -54,10 +54,24 @@ Window {
             }
         }
 
-        function setActiveItem(item, area)
+        function removeLine2(item1)
+        {
+            for (var i = 0; i < lines.length; ++i)
+            {
+                if (lines[i].item2 === item1)
+                {
+                    var item = lines[i].item1;
+                    lines.splice(i, 1);
+                    return item;
+                }
+            }
+        }
+
+        function setActiveItem(item, area, endItemVal)
         {
             activeItem = item
             activeArea = area
+            endItem = endItemVal
         }
 
         function clear()
@@ -77,7 +91,10 @@ Window {
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(activeItem.startDrawPos.x, activeItem.startDrawPos.y);
-            ctx.lineTo(activeArea.mouseX + activeItem.startDrawPos.x, activeArea.mouseY + activeItem.startDrawPos.y)
+            if (!endItem)
+                ctx.lineTo(activeArea.mouseX + activeItem.startDrawPos.x, activeArea.mouseY + activeItem.startDrawPos.y)
+            else
+                ctx.lineTo(activeArea.mouseX + endItem.startDrawPos.x, activeArea.mouseY + endItem.startDrawPos.y)
             ctx.stroke();
 
             canvas.requestPaint();
@@ -87,6 +104,7 @@ Window {
         {
             var ctx = getContext("2d");
             ctx.reset();
+            canvas.requestPaint();
             for (var i = 0; i < lines.length; ++i)
             {
                 ctx.lineWidth = 2;

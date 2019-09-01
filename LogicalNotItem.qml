@@ -67,6 +67,8 @@ Rectangle
     {
         id: inCon
 
+        property var startDrawPos: {"x": container.x + width / 2, "y": container.y + container.height / 2}
+
         y: container.height / 2 - height / 2
 
         width: conSize
@@ -81,7 +83,44 @@ Rectangle
 
         MouseArea
         {
+            id: inConArea
             anchors.fill: parent
+
+            onPressed:
+            {
+                var startItem = canvas.removeLine2(container)
+                isMoveable = !!startItem
+                if (isMoveable)
+                    canvas.setActiveItem(startItem, inConArea, inCon) //TODO: mousearea cant pass
+            }
+            onReleased:
+            {
+                for (var i = 0; i < mainWindow.logicalItems.length; ++i)
+                {
+                    var item = mainWindow.logicalItems[i]
+                    var releaseObj = {"x": container.x + mouseX, "y": container.y + mouseY + container.height / 2}
+
+                    if (releaseObj.x + inCon.width / 2 >= item.inConPos.x && releaseObj.x + inCon.width / 2<= item.inConPos.x + inCon.width &&
+                        releaseObj.y >= item.inConPos.y && releaseObj.y <= item.inConPos.y + inCon.height) //TODO: add condition when link the same element
+                    {
+                        canvas.addLine(canvas.activeItem, item)
+                    }
+                    console.log("*****************")
+                    console.log(releaseObj.x, item.inConPos.x)
+                    console.log("*****************")
+                }
+
+                isMoveable = false
+                canvas.redraw()
+            }
+
+            onPositionChanged:
+            {
+                if (isMoveable)
+                {
+                    canvas.drawLine()
+                }
+            }
         }
     }
 
@@ -135,7 +174,6 @@ Rectangle
                         releaseObj.y >= item.inConPos.y && releaseObj.y <= item.inConPos.y + inCon.height &&
                         container !== item)
                     {
-                        canvas.setActiveItem(outCon, outConArea, item)
                         canvas.addLine(outCon, item)
                     }
                 }
@@ -148,7 +186,7 @@ Rectangle
             {
                 if (isMoveable)
                 {
-                    canvas.removeLine(outCon)
+                    //canvas.removeLine(outCon)
                     canvas.drawLine()
                 }
             }
