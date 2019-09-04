@@ -5,9 +5,10 @@ Rectangle
     id: container
 
     property bool isMoveable: false
-    property var startPos: {"x": 0, "y": 0}
-    property var inConPos: {"x": x + inCon.width - inCon.width / 2, "y": y + height / 2 - inCon.height / 2}
-    property int conSize: 20
+    property int pinSize: 20
+    property var posBeforeMove: {"x": 0, "y": 0}
+    property var inPinPos: {"x": x + inPin.width / 2, "y": y + height / 2}
+    property var outPinPos: {"x": container.x + container.width - pinSize / 2, "y": container.y + container.height / 2}
 
     width: 100
     height: 100
@@ -26,11 +27,6 @@ Rectangle
         anchors.centerIn: parent
     }
 
-    Component.onCompleted:
-    {
-        canvas.setActiveItem(outCon, outConArea, null)
-    }
-
     MouseArea
     {
         anchors.fill: parent
@@ -43,8 +39,8 @@ Rectangle
         onPressed:
         {
             isMoveable = true
-            startPos.x = mouseX
-            startPos.y = mouseY
+            posBeforeMove.x = mouseX
+            posBeforeMove.y = mouseY
         }
         onReleased:
         {
@@ -55,24 +51,30 @@ Rectangle
         {
             if (isMoveable)
             {
-                container.x += mouseX - startPos.x
-                container.y += mouseY - startPos.y
+                container.x += mouseX - posBeforeMove.x
+                container.y += mouseY - posBeforeMove.y
 
                 canvas.redraw()
             }
         }
     }
 
+
+    function inPinConnect(flag)
+    {
+        inPin.color = flag ? "grey" : "white"
+    }
+
     Rectangle
     {
-        id: inCon
+        id: inPin
 
-        property var startDrawPos: {"x": container.x + width / 2, "y": container.y + container.height / 2}
+        property bool isConnectable: false
 
         y: container.height / 2 - height / 2
 
-        width: conSize
-        height: conSize
+        width: pinSize
+        height: pinSize
         color: "white"
         radius: 100
         border
@@ -83,40 +85,41 @@ Rectangle
 
         MouseArea
         {
-            id: inConArea
+            id: inPinArea
             anchors.fill: parent
 
             onPressed:
             {
-                var startItem = canvas.removeLine2(container)
-                isMoveable = !!startItem
-                if (isMoveable)
-                    canvas.setActiveItem(startItem, inConArea, inCon) //TODO: mousearea cant pass
+                container.inPinConnect(false)
+                var outItem = canvas.removeLine(container)
+                inPin.isConnectable = !!outItem
+                if (inPin.isConnectable)
+                    canvas.setActiveItem(outItem, inPinArea, container) //TODO: mousearea cant pass
             }
             onReleased:
             {
                 for (var i = 0; i < mainWindow.logicalItems.length; ++i)
                 {
                     var item = mainWindow.logicalItems[i]
-                    var releaseObj = {"x": container.x + mouseX, "y": container.y + mouseY + container.height / 2}
+                    var releaseObj = {"x": inPinPos.x + mouseX, "y": inPinPos.y + mouseY}
 
-                    if (releaseObj.x + inCon.width / 2 >= item.inConPos.x && releaseObj.x + inCon.width / 2<= item.inConPos.x + inCon.width &&
-                        releaseObj.y >= item.inConPos.y && releaseObj.y <= item.inConPos.y + inCon.height) //TODO: add condition when link the same element
+                    if (releaseObj.x >= item.inPinPos.x && releaseObj.x <= item.inPinPos.x + inPin.width &&
+                        releaseObj.y >= item.inPinPos.y && releaseObj.y <= item.inPinPos.y + inPin.height &&
+                        canvas.outItem !== item) //check connection of the same item
                     {
-                        canvas.addLine(canvas.activeItem, item)
+                        canvas.addLine(canvas.outItem, item)
+                        item.inPinConnect(true)
+                        break
                     }
-                    console.log("*****************")
-                    console.log(releaseObj.x, item.inConPos.x)
-                    console.log("*****************")
                 }
 
-                isMoveable = false
+                inPin.isConnectable = false
                 canvas.redraw()
             }
 
             onPositionChanged:
             {
-                if (isMoveable)
+                if (inPin.isConnectable)
                 {
                     canvas.drawLine()
                 }
@@ -126,15 +129,15 @@ Rectangle
 
     Rectangle
     {
-        id: outCon
+        id: outPin
 
-        property var startDrawPos: {"x": container.x + container.width - width / 2, "y": container.y + container.height / 2}
+        property bool isConnectable: false
 
         x: container.width - width
         y: container.height / 2 - height / 2
 
-        width: conSize
-        height: conSize
+        width: pinSize
+        height: pinSize
         color: "white"
         radius: 100
         border
@@ -145,48 +148,49 @@ Rectangle
 
         MouseArea
         {
-            id: outConArea
+            id: outPinArea
             anchors.fill: parent
             hoverEnabled:  true
 
             onEntered:
             {
-                outCon.color = "grey"
+                outPin.color = "grey"
             }
             onExited:
             {
-                outCon.color = "white"
+                outPin.color = "white"
             }
 
             onPressed:
             {
-                isMoveable = true
-                canvas.setActiveItem(outCon, outConArea)
+                outPin.isConnectable = true
+                canvas.setActiveItem(container, outPinArea)
             }
             onReleased:
             {
                 for (var i = 0; i < mainWindow.logicalItems.length; ++i)
                 {
                     var item = mainWindow.logicalItems[i]
-                    var releaseObj = {"x": container.x + mouseX + container.width, "y": container.y + mouseY + container.height / 2}
+                    var releaseObj = {"x": outPinPos.x + mouseX, "y": outPinPos.y + mouseY}
 
-                    if (releaseObj.x >= item.inConPos.x && releaseObj.x <= item.inConPos.x + inCon.width &&
-                        releaseObj.y >= item.inConPos.y && releaseObj.y <= item.inConPos.y + inCon.height &&
+                    if (releaseObj.x >= item.inPinPos.x && releaseObj.x <= item.inPinPos.x + inPin.width &&
+                        releaseObj.y >= item.inPinPos.y && releaseObj.y <= item.inPinPos.y + inPin.height &&
                         container !== item)
                     {
-                        canvas.addLine(outCon, item)
+                        canvas.addLine(container, item)
+                        item.inPinConnect(true)
+                        break
                     }
                 }
 
-                isMoveable = false
+                outPin.isConnectable = false
                 canvas.redraw()
             }
 
             onPositionChanged:
             {
-                if (isMoveable)
+                if (outPin.isConnectable)
                 {
-                    //canvas.removeLine(outCon)
                     canvas.drawLine()
                 }
             }
