@@ -56,6 +56,23 @@ Rectangle
 
                 canvas.redraw()
             }
+
+            if (container.x < 0)
+            {
+                container.x = 0
+            }
+            if (container.y < 0)
+            {
+                container.y = 0
+            }
+            if (container.x + container.width > mainWindow.width)
+            {
+                container.x = mainWindow.width - container.width
+            }
+            if (container.y + container.height > mainWindow.height)
+            {
+                container.y = mainWindow.height - container.height
+            }
         }
     }
 
@@ -90,8 +107,9 @@ Rectangle
 
             onPressed:
             {
-                container.inPinConnect(false)
-                var outItem = canvas.removeLine(container)
+                var obj = canvas.removeLine(container)
+                var outItem = obj.outItem
+                container.inPinConnect(obj.isPinConnected)
                 inPin.isConnectable = !!outItem
                 if (inPin.isConnectable)
                     canvas.setActiveItem(outItem, inPinArea, container) //TODO: mousearea cant pass

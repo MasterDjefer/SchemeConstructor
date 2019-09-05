@@ -8,7 +8,12 @@ Window {
     visible: true
     width: 640
     height: 480
+    maximumHeight: height
+    minimumHeight: height
+    maximumWidth: width
+    minimumWidth: width
     title: qsTr("Hello World")
+
 
     property var logicalItems: []
 
@@ -39,20 +44,40 @@ Window {
 
         function addLine(item1, item2)
         {
-            lines.push({"item1": item1, "item2": item2})
+            var flag = false
+            for (var i = 0; i < lines.length; ++i)
+            {
+                if (lines[i].item1 === item1 && lines[i].item2 === item2)
+                {
+                    flag = true
+                    break
+                }
+            }
+
+            if (!flag)
+            {
+                lines.push({"item1": item1, "item2": item2})
+            }
         }
 
         function removeLine(item)
         {
-            for (var i = lines.length - 1; i >= 0; --i)
+            var currentIndex = 0
+            var countConnectedItem = 0
+            for (var i = 0; i < lines.length; ++i)
             {
                 if (lines[i].item2 === item)
                 {
-                    var currentItem = lines[i].item1;
-                    lines.splice(i, 1);
-                    return currentItem;
+                    countConnectedItem++
+                    currentIndex = i
                 }
             }
+
+            var currentItem = lines[currentIndex].item1
+            lines.splice(currentIndex, 1)
+
+            return {"outItem": currentItem, "isPinConnected": countConnectedItem > 1}
+
         }
 
         function setActiveItem(outItem, outArea, inItem) //third param if draw from inPin
