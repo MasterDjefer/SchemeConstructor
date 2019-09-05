@@ -107,9 +107,8 @@ Rectangle
 
             onPressed:
             {
-                var obj = canvas.removeLine(container)
-                var outItem = obj.outItem
-                container.inPinConnect(obj.isPinConnected)
+                container.inPinConnect(false)
+                var outItem = canvas.removeLine(container)
                 inPin.isConnectable = !!outItem
                 if (inPin.isConnectable)
                     canvas.setActiveItem(outItem, inPinArea, container) //TODO: mousearea cant pass
@@ -193,7 +192,7 @@ Rectangle
 
                     if (releaseObj.x >= item.inPinPos.x && releaseObj.x <= item.inPinPos.x + inPin.width &&
                         releaseObj.y >= item.inPinPos.y && releaseObj.y <= item.inPinPos.y + inPin.height &&
-                        container !== item)
+                        container !== item && canvas.checkConnection(item))
                     {
                         canvas.addLine(container, item)
                         item.inPinConnect(true)

@@ -60,24 +60,30 @@ Window {
             }
         }
 
-        function removeLine(item)
+        function checkConnection(item)
         {
-            var currentIndex = 0
-            var countConnectedItem = 0
             for (var i = 0; i < lines.length; ++i)
             {
                 if (lines[i].item2 === item)
                 {
-                    countConnectedItem++
-                    currentIndex = i
+                    return false
                 }
             }
 
-            var currentItem = lines[currentIndex].item1
-            lines.splice(currentIndex, 1)
+            return true
+        }
 
-            return {"outItem": currentItem, "isPinConnected": countConnectedItem > 1}
-
+        function removeLine(item)
+        {
+            for (var i = lines.length - 1; i >= 0; --i)
+            {
+                if (lines[i].item2 === item)
+                {
+                    var currentItem = lines[i].item1
+                    lines.splice(i, 1)
+                    return currentItem
+                }
+            }
         }
 
         function setActiveItem(outItem, outArea, inItem) //third param if draw from inPin
