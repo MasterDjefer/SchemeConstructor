@@ -53,8 +53,6 @@ Rectangle
             {
                 container.x += mouseX - posBeforeMove.x
                 container.y += mouseY - posBeforeMove.y
-
-                canvas.redraw()
             }
 
             if (container.x < 0)
@@ -72,6 +70,11 @@ Rectangle
             if (container.y + container.height > mainWindow.height)
             {
                 container.y = mainWindow.height - container.height
+            }
+
+            if (isMoveable)
+            {
+                canvas.redraw()
             }
         }
     }
@@ -210,6 +213,40 @@ Rectangle
                 {
                     canvas.drawLine()
                 }
+            }
+        }
+    }
+
+    Rectangle
+    {
+        id: a
+
+        width: pinSize
+        height: pinSize
+        x: container.width - width - container.border.width
+        y: container.border.width
+
+        color: "#ddded6"
+
+        Image
+        {
+            source: "qrc:/removeIcon.png"
+            anchors.fill: parent
+        }
+
+        MouseArea
+        {
+            anchors.fill: parent
+            hoverEnabled:  true
+
+            onEntered:
+            {
+                cursorShape = Qt.PointingHandCursor
+            }
+
+            onClicked:
+            {
+                mainWindow.destroyItem(container)
             }
         }
     }

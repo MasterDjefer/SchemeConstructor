@@ -17,6 +17,33 @@ Window {
 
     property var logicalItems: []
 
+
+    function destroyItem(item)
+    {
+        for (var i = 0; i < canvas.lines.length;)
+        {
+            if (canvas.lines[i].item1 === item)
+            {
+                canvas.lines[i].item2.inPinConnect(false)
+                canvas.lines.splice(i, 1)
+            }
+            else
+            if (canvas.lines[i].item2 === item)
+            {
+                canvas.lines.splice(i, 1)
+            }
+            else
+            {
+                i++
+            }
+        }
+
+        logicalItems.splice(logicalItems.indexOf(item), 1)
+        item.destroy()
+
+        canvas.redraw()
+    }
+
     Button
     {
         y: 300

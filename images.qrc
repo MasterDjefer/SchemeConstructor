@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>logicalNot.png</file>
+        <file>removeIcon.png</file>
     </qresource>
 </RCC>
