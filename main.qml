@@ -12,7 +12,7 @@ Window {
     minimumHeight: height
     maximumWidth: width
     minimumWidth: width
-    title: qsTr("ssaaaaaaaaaAaasassa World")
+    title: qsTr("Hello World")
 
 
     property var logicalItems: []

@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/LogicalItems/logicalNot.png</file>
         <file>images/Tools/removeIcon.png</file>
-        <file>images/LogicalItems/output.png</file>
         <file>images/LogicalItems/input.png</file>
+        <file>images/LogicalItems/logicalNot.png</file>
+        <file>images/LogicalItems/output.png</file>
     </qresource>
 </RCC>
