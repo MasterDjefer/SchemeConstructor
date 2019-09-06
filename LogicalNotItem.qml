@@ -23,7 +23,7 @@ Rectangle
     {
         width: container.width - container.border.width * 2
         height: container.height - container.border.width * 2
-        source: "qrc:/logicalNot.png"
+        source: "qrc:/images/LogicalItems/logicalNot.png"
         anchors.centerIn: parent
     }
 
@@ -230,7 +230,7 @@ Rectangle
 
         Image
         {
-            source: "qrc:/removeIcon.png"
+            source: "qrc:/images/Tools/removeIcon.png"
             anchors.fill: parent
         }
 
