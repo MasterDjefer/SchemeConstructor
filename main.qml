@@ -6,16 +6,33 @@ Window {
     id: mainWindow
 
     visible: true
-    width: 640
-    height: 480
+    width: 800
+    height: 550
     maximumHeight: height
     minimumHeight: height
     maximumWidth: width
     minimumWidth: width
-    title: qsTr("Hello World")
+    title: qsTr("ssaaaaaaaaaAaasassa World")
 
 
     property var logicalItems: []
+
+
+    Component.onCompleted:
+    {
+        var component = Qt.createComponent("LogicalOutputItem.qml")
+        var item = component.createObject(mainWindow)
+        item.x = mainWindow.width - item.width
+        item.y = mainWindow.height / 2 - item.height / 2
+        logicalItems.push(item)
+
+
+        component = Qt.createComponent("LogicalInputItem.qml")
+        item = component.createObject(mainWindow)
+        item.x = 0
+        item.y = mainWindow.height / 2 - item.height / 2
+        logicalItems.push(item)
+    }
 
 
     function destroyItem(item)
@@ -24,7 +41,7 @@ Window {
         {
             if (canvas.lines[i].item1 === item)
             {
-                canvas.lines[i].item2.inPinConnect(false)
+                canvas.lines[i].item2.pinConnect(false)
                 canvas.lines.splice(i, 1)
             }
             else
@@ -46,7 +63,7 @@ Window {
 
     Button
     {
-        y: 300
+        y: mainWindow.height - height
 
         onClicked:
         {

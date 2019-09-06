@@ -2,5 +2,10 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>LogicalNotItem.qml</file>
+        <file>DestroyItem.qml</file>
+        <file>LogicalOutputItem.qml</file>
+        <file>LogicalBaseItem.qml</file>
+        <file>PinItem.qml</file>
+        <file>LogicalInputItem.qml</file>
     </qresource>
 </RCC>

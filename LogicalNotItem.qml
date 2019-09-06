@@ -1,253 +1,112 @@
 import QtQuick 2.0
 
-Rectangle
+LogicalBaseItem
 {
     id: container
 
-    property bool isMoveable: false
-    property int pinSize: 20
-    property var posBeforeMove: {"x": 0, "y": 0}
-    property var inPinPos: {"x": x + inPin.width / 2, "y": y + height / 2}
-    property var outPinPos: {"x": container.x + container.width - pinSize / 2, "y": container.y + container.height / 2}
+    imgPath: "qrc:/images/LogicalItems/logicalNot.png"
+    type: 2
 
-    width: 100
-    height: 100
-
-    border
-    {
-        width: 2
-        color: "black"
-    }
-
-    Image
-    {
-        width: container.width - container.border.width * 2
-        height: container.height - container.border.width * 2
-        source: "qrc:/images/LogicalItems/logicalNot.png"
-        anchors.centerIn: parent
-    }
-
-    MouseArea
-    {
-        anchors.fill: parent
-        hoverEnabled: true
-        onEntered:
-        {
-            cursorShape = Qt.SizeAllCursor
-        }
-
-        onPressed:
-        {
-            isMoveable = true
-            posBeforeMove.x = mouseX
-            posBeforeMove.y = mouseY
-        }
-        onReleased:
-        {
-            isMoveable = false
-        }
-
-        onPositionChanged:
-        {
-            if (isMoveable)
-            {
-                container.x += mouseX - posBeforeMove.x
-                container.y += mouseY - posBeforeMove.y
-            }
-
-            if (container.x < 0)
-            {
-                container.x = 0
-            }
-            if (container.y < 0)
-            {
-                container.y = 0
-            }
-            if (container.x + container.width > mainWindow.width)
-            {
-                container.x = mainWindow.width - container.width
-            }
-            if (container.y + container.height > mainWindow.height)
-            {
-                container.y = mainWindow.height - container.height
-            }
-
-            if (isMoveable)
-            {
-                canvas.redraw()
-            }
-        }
-    }
+    property var inPinPos: {"x": x, "y": y + height / 2}
+    property var outPinPos: {"x": x + width, "y": y + height / 2}
+    property var pinConnect: inPin.pinConnect
 
 
-    function inPinConnect(flag)
-    {
-        inPin.color = flag ? "grey" : "white"
-    }
-
-    Rectangle
+    PinItem
     {
         id: inPin
 
-        property bool isConnectable: false
+        x: - pinSize / 2
+        y: logicalItemSize / 2 - pinSize / 2
+        father: container
+        type: "in"
 
-        y: container.height / 2 - height / 2
-
-        width: pinSize
-        height: pinSize
-        color: "white"
-        radius: 100
-        border
+        onPressedFunc: function()
         {
-            width: 1
-            color: "black"
+            pinConnect(false)
+            var outItem = canvas.removeLine(container)
+            isConnectable = !!outItem
+            if (isConnectable)
+                canvas.setActiveItem(outItem, pinArea, container) //TODO: mousearea cant pass
         }
 
-        MouseArea
+        onReleasedFunc: function()
         {
-            id: inPinArea
-            anchors.fill: parent
-
-            onPressed:
+            for (var i = 0; i < mainWindow.logicalItems.length; ++i)
             {
-                container.inPinConnect(false)
-                var outItem = canvas.removeLine(container)
-                inPin.isConnectable = !!outItem
-                if (inPin.isConnectable)
-                    canvas.setActiveItem(outItem, inPinArea, container) //TODO: mousearea cant pass
-            }
-            onReleased:
-            {
-                for (var i = 0; i < mainWindow.logicalItems.length; ++i)
+                var logicalItem = mainWindow.logicalItems[i]
+                if (canvas.outItem === logicalItem)
                 {
-                    var item = mainWindow.logicalItems[i]
-                    var releaseObj = {"x": inPinPos.x + mouseX, "y": inPinPos.y + mouseY}
+                    continue
+                }
 
-                    if (releaseObj.x >= item.inPinPos.x && releaseObj.x <= item.inPinPos.x + inPin.width &&
-                        releaseObj.y >= item.inPinPos.y && releaseObj.y <= item.inPinPos.y + inPin.height &&
-                        canvas.outItem !== item) //check connection of the same item
+                var endLinePos = {"x": inPinPos.x + pinArea.mouseX, "y": inPinPos.y + pinArea.mouseY}
+
+                if (logicalItem.type === 2)
+                {
+                    if (endLinePos.x >= logicalItem.inPinPos.x && endLinePos.x <= logicalItem.inPinPos.x + pinSize &&
+                        endLinePos.y >= logicalItem.inPinPos.y && endLinePos.y <= logicalItem.inPinPos.y + pinSize)
                     {
-                        canvas.addLine(canvas.outItem, item)
-                        item.inPinConnect(true)
+                        canvas.addLine(canvas.outItem, logicalItem)
+                        logicalItem.pinConnect(true)
                         break
                     }
                 }
-
-                inPin.isConnectable = false
-                canvas.redraw()
             }
 
-            onPositionChanged:
-            {
-                if (inPin.isConnectable)
-                {
-                    canvas.drawLine()
-                }
-            }
+            isConnectable = false
+            canvas.redraw()
         }
     }
 
-    Rectangle
+
+    PinItem
     {
         id: outPin
 
-        property bool isConnectable: false
+        x: logicalItemSize - pinSize / 2
+        y: logicalItemSize / 2 - pinSize / 2
+        father: container
+        type: "out"
 
-        x: container.width - width
-        y: container.height / 2 - height / 2
-
-        width: pinSize
-        height: pinSize
-        color: "white"
-        radius: 100
-        border
+        onPressedFunc: function()
         {
-            width: 1
-            color: "black"
+            isConnectable = true
+            canvas.setActiveItem(container, pinArea)
         }
 
-        MouseArea
+        onReleasedFunc: function()
         {
-            id: outPinArea
-            anchors.fill: parent
-            hoverEnabled:  true
-
-            onEntered:
+            for (var i = 0; i < mainWindow.logicalItems.length; ++i)
             {
-                outPin.color = "grey"
-            }
-            onExited:
-            {
-                outPin.color = "white"
-            }
-
-            onPressed:
-            {
-                outPin.isConnectable = true
-                canvas.setActiveItem(container, outPinArea)
-            }
-            onReleased:
-            {
-                for (var i = 0; i < mainWindow.logicalItems.length; ++i)
+                var logicalItem = mainWindow.logicalItems[i]
+                if (container === logicalItem)
                 {
-                    var item = mainWindow.logicalItems[i]
-                    var releaseObj = {"x": outPinPos.x + mouseX, "y": outPinPos.y + mouseY}
+                    continue
+                }
 
-                    if (releaseObj.x >= item.inPinPos.x && releaseObj.x <= item.inPinPos.x + inPin.width &&
-                        releaseObj.y >= item.inPinPos.y && releaseObj.y <= item.inPinPos.y + inPin.height &&
-                        container !== item && canvas.checkConnection(item))
+                var endLinePos = {"x": outPinPos.x + pinArea.mouseX, "y": outPinPos.y + pinArea.mouseY}
+
+                if (logicalItem.type === 2)
+                {
+                    if (endLinePos.x >= logicalItem.inPinPos.x && endLinePos.x <= logicalItem.inPinPos.x + pinSize &&
+                        endLinePos.y >= logicalItem.inPinPos.y && endLinePos.y <= logicalItem.inPinPos.y + pinSize &&
+                        canvas.checkConnection(logicalItem))
                     {
-                        canvas.addLine(container, item)
-                        item.inPinConnect(true)
+                        canvas.addLine(container, logicalItem)
+                        logicalItem.pinConnect(true)
                         break
                     }
                 }
-
-                outPin.isConnectable = false
-                canvas.redraw()
             }
 
-            onPositionChanged:
-            {
-                if (outPin.isConnectable)
-                {
-                    canvas.drawLine()
-                }
-            }
+            isConnectable = false
+            canvas.redraw()
         }
     }
 
-    Rectangle
+    DestroyItem
     {
-        id: a
-
-        width: pinSize
-        height: pinSize
-        x: container.width - width - container.border.width
-        y: container.border.width
-
-        color: "#ddded6"
-
-        Image
-        {
-            source: "qrc:/images/Tools/removeIcon.png"
-            anchors.fill: parent
-        }
-
-        MouseArea
-        {
-            anchors.fill: parent
-            hoverEnabled:  true
-
-            onEntered:
-            {
-                cursorShape = Qt.PointingHandCursor
-            }
-
-            onClicked:
-            {
-                mainWindow.destroyItem(container)
-            }
-        }
+        father: container
     }
 }
