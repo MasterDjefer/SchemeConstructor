@@ -2,8 +2,12 @@
     <qresource prefix="/">
         <file>images/Tools/removeIcon.png</file>
         <file>images/LogicalItems/input.png</file>
-        <file>images/LogicalItems/logicalNot.png</file>
         <file>images/LogicalItems/output.png</file>
         <file>images/LogicalItems/logicalAnd.png</file>
+        <file>images/LogicalItems/logicalNand.png</file>
+        <file>images/LogicalItems/logicalNor.png</file>
+        <file>images/LogicalItems/logicalNot.png</file>
+        <file>images/LogicalItems/logicalOr.png</file>
+        <file>images/LogicalItems/logicalXor.png</file>
     </qresource>
 </RCC>

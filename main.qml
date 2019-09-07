@@ -6,8 +6,8 @@ Window {
     id: mainWindow
 
     visible: true
-    width: 800
-    height: 550
+    width: 1000
+    height: 700
     maximumHeight: height
     minimumHeight: height
     maximumWidth: width
@@ -22,15 +22,8 @@ Window {
     {
         var component = Qt.createComponent("LogicalOutputItem.qml")
         var item = component.createObject(mainWindow)
-        item.x = mainWindow.width - item.width
-        item.y = mainWindow.height / 2 - item.height / 2
-        logicalItems.push(item)
-
-
-        component = Qt.createComponent("LogicalInputItem.qml")
-        item = component.createObject(mainWindow)
-        item.x = 0
-        item.y = mainWindow.height / 2 - item.height / 2
+        item.x = canvas.width - item.width
+        item.y = canvas.height / 2 - item.height / 2
         logicalItems.push(item)
     }
 
@@ -72,12 +65,40 @@ Window {
             logicalItems.push(item)
         }
     }
+    Button
+    {
+        x: width
+        y: mainWindow.height - height
+
+        onClicked:
+        {
+            var component = Qt.createComponent("LogicalAndItem.qml");
+            var item = component.createObject(mainWindow);
+            logicalItems.push(item)
+        }
+    }
+
+    Rectangle
+    {
+        width: 3
+        height: mainWindow.height
+        x: canvas.width
+
+        color: "black"
+    }
+
+    ControllBar
+    {
+
+    }
 
     Canvas
     {
         id: canvas
+        width: mainWindow.width - 200//for sidebar
+        height: mainWindow.height
 
-        anchors.fill: parent
+//        anchors.fill: parent
 //        z: 1
 
         property var lines: []

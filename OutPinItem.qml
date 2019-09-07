@@ -52,20 +52,14 @@ BasePinItem
                             canvas.addLine(father, logicalItem, j)
                             logicalItem.pinConnect[j](true)
 
-                            lineAddEnd()
+                            releaseEventEnd()
                             return
                         }
                     }
                 }
             }
 
-            lineAddEnd()
-        }
-
-        function lineAddEnd()
-        {
-            isConnectable = false
-            canvas.redraw()
+            releaseEventEnd()
         }
 
         onPositionChanged:

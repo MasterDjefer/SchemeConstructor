@@ -17,4 +17,11 @@ Rectangle
         width: 1
         color: "black"
     }
+
+    function releaseEventEnd()
+    {
+        isConnectable = false
+        canvas.setActiveItem(null, null, -0, null)
+        canvas.redraw()
+    }
 }

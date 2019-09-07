@@ -30,7 +30,7 @@ BasePinItem
             for (var i = 0; i < mainWindow.logicalItems.length; ++i)
             {
                 var logicalItem = mainWindow.logicalItems[i]
-                if (canvas.outItem === logicalItem)
+                if (!canvas.outItem || canvas.outItem === logicalItem)
                 {
                     continue
                 }
@@ -52,20 +52,14 @@ BasePinItem
                             canvas.addLine(canvas.outItem, logicalItem, j)
                             logicalItem.pinConnect[j](true)
 
-                            lineAddEnd()
+                            releaseEventEnd()
                             return
                         }
                     }
                 }
             }
 
-            lineAddEnd()
-        }
-
-        function lineAddEnd()
-        {
-            isConnectable = false
-            canvas.redraw()
+            releaseEventEnd()
         }
 
         onPositionChanged:

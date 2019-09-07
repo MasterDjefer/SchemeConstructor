@@ -64,13 +64,13 @@ Rectangle
             {
                 container.y = 0
             }
-            if (container.x + container.width > mainWindow.width)
+            if (container.x + container.width > canvas.width)
             {
-                container.x = mainWindow.width - container.width
+                container.x = canvas.width - container.width
             }
-            if (container.y + container.height > mainWindow.height)
+            if (container.y + container.height > canvas.height)
             {
-                container.y = mainWindow.height - container.height
+                container.y = canvas.height - container.height
             }
 
             if (isMoveable)
