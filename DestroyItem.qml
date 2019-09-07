@@ -5,9 +5,10 @@ Rectangle
     color: "#ddded6"
 
     property var father: null
+    property int destroyItemSize: 20
 
-    width: father.destroyItemSize
-    height: father.destroyItemSize
+    width: destroyItemSize
+    height: destroyItemSize
     x: father.width - width - father.border.width
     y: father.border.width
 

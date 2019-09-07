@@ -41,7 +41,7 @@ Window {
         {
             if (canvas.lines[i].item1 === item)
             {
-                canvas.lines[i].item2.pinConnect(false)
+                canvas.lines[i].item2.pinConnect[canvas.lines[i].pin](false)
                 canvas.lines.splice(i, 1)
             }
             else
@@ -78,37 +78,33 @@ Window {
         id: canvas
 
         anchors.fill: parent
-        z: 1
+//        z: 1
 
         property var lines: []
 
         property var outItem: null
         property var outArea: null
+        property int currentPin: -1
         property var inItem: null
 
-        function addLine(item1, item2)
+        function addLine(item1, item2, pin)
         {
-            var flag = false
             for (var i = 0; i < lines.length; ++i)
             {
-                if (lines[i].item1 === item1 && lines[i].item2 === item2)
+                if (lines[i].item1 === item1 && lines[i].item2 === item2 && lines[i].pin === pin)
                 {
-                    flag = true
-                    break
+                    return
                 }
             }
 
-            if (!flag)
-            {
-                lines.push({"item1": item1, "item2": item2})
-            }
+            lines.push({"item1": item1, "item2": item2, "pin": pin})
         }
 
-        function checkConnection(item)
+        function checkConnection(item, pin)
         {
             for (var i = 0; i < lines.length; ++i)
             {
-                if (lines[i].item2 === item)
+                if (lines[i].item2 === item && pin === lines[i].pin)
                 {
                     return false
                 }
@@ -117,11 +113,11 @@ Window {
             return true
         }
 
-        function removeLine(item)
+        function removeLine(item, pin)
         {
             for (var i = lines.length - 1; i >= 0; --i)
             {
-                if (lines[i].item2 === item)
+                if (lines[i].item2 === item && lines[i].pin === pin)
                 {
                     var currentItem = lines[i].item1
                     lines.splice(i, 1)
@@ -130,10 +126,11 @@ Window {
             }
         }
 
-        function setActiveItem(outItem, outArea, inItem) //third param if draw from inPin
+        function setActiveItem(outItem, outArea, currentPin, inItem) //third param if draw from inPin
         {
             canvas.outItem = outItem
             canvas.outArea = outArea
+            canvas.currentPin = currentPin
             canvas.inItem= inItem
         }
 
@@ -156,23 +153,30 @@ Window {
             if (!inItem)
                 ctx.lineTo(outArea.mouseX + outItem.outPinPos.x, outArea.mouseY + outItem.outPinPos.y)
             else
-                ctx.lineTo(outArea.mouseX + inItem.inPinPos.x, outArea.mouseY + inItem.inPinPos.y)
-            ctx.stroke();
+            {
+                ctx.lineTo(outArea.mouseX + inItem.inPinPos[currentPin].x, outArea.mouseY + inItem.inPinPos[currentPin].y)
+            }
 
-            canvas.requestPaint();
+            ctx.stroke()
+
+            canvas.requestPaint()
         }
 
         function redraw()
         {
-            var ctx = getContext("2d");
-            ctx.reset();
-            canvas.requestPaint();
+            var ctx = getContext("2d")
+            ctx.reset()
+            canvas.requestPaint()
+
             for (var i = 0; i < lines.length; ++i)
             {
                 ctx.lineWidth = 2;
                 ctx.beginPath();
-                ctx.moveTo(lines[i].item1.outPinPos.x, lines[i].item1.outPinPos.y);
-                ctx.lineTo(lines[i].item2.inPinPos.x, lines[i].item2.inPinPos.y);
+
+                ctx.moveTo(lines[i].item1.outPinPos.x, lines[i].item1.outPinPos.y)
+
+                ctx.lineTo(lines[i].item2.inPinPos[lines[i].pin].x, lines[i].item2.inPinPos[lines[i].pin].y);
+
                 ctx.stroke();
                 canvas.requestPaint();
             }

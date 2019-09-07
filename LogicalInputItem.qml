@@ -4,76 +4,42 @@ LogicalBaseItem
 {
     id: container
 
-    color: isOn ? "yellow" : "white"
+    color: isOn ? "#ffe386" : "white"
 
     imgPath: ""
-    type: 1
+    logicalType: 1
 
     property var outPinPos: {"x": x + width, "y": y + height / 2}
     property bool isOn: false
 
-    PinItem
+    OutPinItem
     {
         id: outPin
 
         x: logicalItemSize - pinSize / 2
         y: logicalItemSize / 2 - pinSize / 2
         father: container
-        type: "out"
-
-        onPressedFunc: function()
-        {
-            isConnectable = true
-            canvas.setActiveItem(container, pinArea)
-        }
-
-        onReleasedFunc: function()
-        {
-            for (var i = 0; i < mainWindow.logicalItems.length; ++i)
-            {
-                var logicalItem = mainWindow.logicalItems[i]
-                if (container === logicalItem)
-                {
-                    continue
-                }
-
-                var endLinePos = {"x": outPinPos.x + pinArea.mouseX, "y": outPinPos.y + pinArea.mouseY}
-
-                if (logicalItem.type === 2)
-                {
-                    if (endLinePos.x >= logicalItem.inPinPos.x && endLinePos.x <= logicalItem.inPinPos.x + pinSize &&
-                        endLinePos.y >= logicalItem.inPinPos.y && endLinePos.y <= logicalItem.inPinPos.y + pinSize &&
-                        canvas.checkConnection(logicalItem))
-                    {
-                        canvas.addLine(container, logicalItem)
-                        logicalItem.pinConnect(true)
-                        break
-                    }
-                }
-            }
-
-            isConnectable = false
-            canvas.redraw()
-        }
     }
 
     Rectangle
     {
-        width: logicalItemSize - 40
-        height: logicalItemSize - 20
+        width: logicalItemSize * 0.6
+        height: logicalItemSize * 0.8
         x: (logicalItemSize - width) / 2
-        y: logicalItemSize - height - container.border.width
+        y: logicalItemSize - height
 
-//        border
-//        {
-//            width: 2
-//            color: "black"
-//        }
+        border
+        {
+            width: 2
+            color: "black"
+        }
 
         Image
         {
             source: "qrc:/images/LogicalItems/input.png"
-            anchors.fill: parent
+            anchors.centerIn: parent
+            width: parent.width - parent.border.width * 2
+            height: parent.height - parent.border.width * 2
         }
 
         MouseArea
@@ -85,5 +51,10 @@ LogicalBaseItem
                 isOn = !isOn
             }
         }
+    }
+
+    DestroyItem
+    {
+        father: container
     }
 }

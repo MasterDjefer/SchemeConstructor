@@ -5,7 +5,10 @@
         <file>DestroyItem.qml</file>
         <file>LogicalOutputItem.qml</file>
         <file>LogicalBaseItem.qml</file>
-        <file>PinItem.qml</file>
+        <file>BasePinItem.qml</file>
         <file>LogicalInputItem.qml</file>
+        <file>LogicalAndItem.qml</file>
+        <file>OutPinItem.qml</file>
+        <file>InPinItem.qml</file>
     </qresource>
 </RCC>

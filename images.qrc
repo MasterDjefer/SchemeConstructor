@@ -4,5 +4,6 @@
         <file>images/LogicalItems/input.png</file>
         <file>images/LogicalItems/logicalNot.png</file>
         <file>images/LogicalItems/output.png</file>
+        <file>images/LogicalItems/logicalAnd.png</file>
     </qresource>
 </RCC>
