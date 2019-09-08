@@ -61,6 +61,7 @@ Rectangle
                         component = Qt.createComponent("LogicalTwoPinItem.qml")
                         item = component.createObject(mainWindow)
                         item.imgPath = "qrc:/images/LogicalItems/logical" + logicalItemsBox.currentText + ".png"
+                        item.name = logicalItemsBox.currentText
                     }
 
                     mainWindow.logicalItems.push(item)

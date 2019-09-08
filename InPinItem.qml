@@ -4,7 +4,7 @@ BasePinItem
 {
     id: pin
     property int pinNumber: 0 //0 - single, 1 - first, 2 - second
-    //(for out pin only) 0 - element with one in, 1 - first in pin, 2 - second pin
+                              //(for out pin only) 0 - element with one in, 1 - first in pin, 2 - second pin
 
     function pinConnect(flag)
     {
