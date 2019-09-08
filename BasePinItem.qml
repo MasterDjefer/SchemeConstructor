@@ -21,7 +21,7 @@ Rectangle
     function releaseEventEnd()
     {
         isConnectable = false
-        canvas.setActiveItem(null, null, -0, null)
+        canvas.setActiveItem(null, null, -1, null)
         canvas.redraw()
     }
 }

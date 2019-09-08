@@ -8,7 +8,6 @@ LogicalBaseItem
 
     imgPath: ""
     logicalType: 1
-    name: "Input"
 
     property var outPinPos: {"x": x + width, "y": y + height / 2}
     property bool isOn: false

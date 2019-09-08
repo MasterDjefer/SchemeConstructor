@@ -6,7 +6,6 @@ LogicalBaseItem
 
     imgPath: "qrc:/images/LogicalItems/logicalNot.png"
     logicalType: 2
-    name: "Not"
 
     property var inPinPos: [{"x": x, "y": y + height / 2}]
     property var outPinPos: {"x": x + width, "y": y + height / 2}

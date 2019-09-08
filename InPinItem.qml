@@ -35,7 +35,8 @@ BasePinItem
                     continue
                 }
 
-                var endLinePos = {"x": father.inPinPos[pinNumber].x + mouseArea.mouseX, "y": father.inPinPos[pinNumber].y + mouseArea.mouseY}
+                var endLinePos = {"x": father.inPinPos[pinNumber].x + mouseArea.mouseX,
+                                  "y": father.inPinPos[pinNumber].y + mouseArea.mouseY}
 
                 if (logicalItem.logicalType > 1)
                 {

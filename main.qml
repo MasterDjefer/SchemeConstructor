@@ -12,11 +12,9 @@ Window {
     minimumHeight: height
     maximumWidth: width
     minimumWidth: width
-    title: qsTr("Helalo World")
-
+    title: qsTr("Scheme constructor")
 
     property var logicalItems: []
-
 
     Component.onCompleted:
     {
@@ -26,7 +24,6 @@ Window {
         item.y = canvas.height / 2 - item.height / 2
         logicalItems.push(item)
     }
-
 
     function destroyItem(item)
     {
@@ -52,6 +49,21 @@ Window {
         item.destroy()
 
         canvas.redraw()
+    }
+
+    function countItemByName(name)
+    {
+        var count = 0
+
+        for (var i = 0; i < logicalItems.length; ++i)
+        {
+            if (logicalItems[i].name.search(name) !== -1)
+            {
+                count++
+            }
+        }
+
+        return count
     }
 
     Rectangle
@@ -123,7 +135,7 @@ Window {
             }
         }
 
-        function setActiveItem(outItem, outArea, currentPin, inItem) //third param if draw from inPin
+        function setActiveItem(outItem, outArea, currentPin, inItem) //fourth param if draw from inPin
         {
             canvas.outItem = outItem
             canvas.outArea = outArea
