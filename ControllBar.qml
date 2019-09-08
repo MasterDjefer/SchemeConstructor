@@ -49,12 +49,23 @@ Rectangle
 
                 onClicked:
                 {
-                    var component = Qt.createComponent("Logical" + logicalItemsBox.currentText + "Item.qml")
-                    var item = component.createObject(mainWindow)
+                    var component = null
+                    var item = null
+                    if (logicalItemsBox.currentIndex < 2)
+                    {
+                        component = Qt.createComponent("Logical" + logicalItemsBox.currentText + "Item.qml")
+                        item = component.createObject(mainWindow)
+                    }
+                    else
+                    {
+                        component = Qt.createComponent("LogicalTwoPinItem.qml")
+                        item = component.createObject(mainWindow)
+                        item.imgPath = "qrc:/images/LogicalItems/logical" + logicalItemsBox.currentText + ".png"
+                    }
+
                     mainWindow.logicalItems.push(item)
                 }
             }
         }
     }
-
 }

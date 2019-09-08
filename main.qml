@@ -12,7 +12,7 @@ Window {
     minimumHeight: height
     maximumWidth: width
     minimumWidth: width
-    title: qsTr("Hello World")
+    title: qsTr("Helalo World")
 
 
     property var logicalItems: []
@@ -52,30 +52,6 @@ Window {
         item.destroy()
 
         canvas.redraw()
-    }
-
-    Button
-    {
-        y: mainWindow.height - height
-
-        onClicked:
-        {
-            var component = Qt.createComponent("LogicalNotItem.qml");
-            var item = component.createObject(mainWindow);
-            logicalItems.push(item)
-        }
-    }
-    Button
-    {
-        x: width
-        y: mainWindow.height - height
-
-        onClicked:
-        {
-            var component = Qt.createComponent("LogicalAndItem.qml");
-            var item = component.createObject(mainWindow);
-            logicalItems.push(item)
-        }
     }
 
     Rectangle

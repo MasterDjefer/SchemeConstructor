@@ -4,8 +4,9 @@ LogicalBaseItem
 {
     id: container
 
-    imgPath: "qrc:/images/LogicalItems/output.png"
+    imgPath: "qrc:/images/LogicalItems/logicalOutput.png"
     logicalType: 2
+    name: "Output"
 
     property var inPinPos: [{"x": x, "y": y + height / 2}]
     property var pinConnect: [inPin.pinConnect]

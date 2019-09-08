@@ -7,7 +7,7 @@
         <file>LogicalBaseItem.qml</file>
         <file>BasePinItem.qml</file>
         <file>LogicalInputItem.qml</file>
-        <file>LogicalAndItem.qml</file>
+        <file>LogicalTwoPinItem.qml</file>
         <file>OutPinItem.qml</file>
         <file>InPinItem.qml</file>
         <file>ControllBar.qml</file>

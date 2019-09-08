@@ -7,6 +7,7 @@ Rectangle
     property bool isMoveable: false
     property var posBeforeMove: {"x": 0, "y": 0}
     property int logicalItemSize: 100
+    property string name: "" //input, output, and, or...
 
     property string imgPath: ""
     property int logicalType: 0 //1 - only out Pin, 2 - only in pin or both, 3 - two in pins and out pin

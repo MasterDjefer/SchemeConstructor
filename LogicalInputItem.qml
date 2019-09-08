@@ -8,6 +8,7 @@ LogicalBaseItem
 
     imgPath: ""
     logicalType: 1
+    name: "Input"
 
     property var outPinPos: {"x": x + width, "y": y + height / 2}
     property bool isOn: false
@@ -36,7 +37,7 @@ LogicalBaseItem
 
         Image
         {
-            source: "qrc:/images/LogicalItems/input.png"
+            source: "qrc:/images/LogicalItems/logicalInput.png"
             anchors.centerIn: parent
             width: parent.width - parent.border.width * 2
             height: parent.height - parent.border.width * 2

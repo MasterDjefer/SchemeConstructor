@@ -4,7 +4,7 @@ LogicalBaseItem
 {
     id: container
 
-    imgPath: "qrc:/images/LogicalItems/logicalAnd.png"
+//    imgPath: "qrc:/images/LogicalItems/logicalAnd.png"
     logicalType: 3
 
     property var inPinPos: [null, {"x": x, "y": y + height / 3}, {"x": x, "y": y + height / 3 * 2}]
