@@ -1,9 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
+import Package.LogicalItemsMap 1.0
 
 Window {
     id: mainWindow
+    objectName: "mainWindow"
 
     visible: true
     width: 1000
@@ -15,6 +17,8 @@ Window {
     title: qsTr("Scheme constructor")
 
     property var logicalItems: []
+
+    signal logicalItemsMap(var data)
 
     Component.onCompleted:
     {
@@ -80,6 +84,11 @@ Window {
 
     }
 
+    LogicalItemsMap
+    {
+        id: logicalItemsMap
+    }
+
     Canvas
     {
         id: canvas
@@ -99,10 +108,12 @@ Window {
 
         function printConnection()
         {
+            var itemsMap = []
             for (var i = 0; i < lines.length; ++i)
             {
-                console.log(lines[i].item1.name + " -> " + lines[i].item2.name + ": " + lines[i].pin)
+                itemsMap.push({"out": lines[i].item1.name, "in": lines[i].item2.name, "pin": lines[i].pin, "value": 0});
             }
+            logicalItemsMap.getLogicalItemsMap(itemsMap) //C++ object's method call
         }
 
         function addLine(item1, item2, pin)
