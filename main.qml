@@ -96,6 +96,15 @@ Window {
         property int currentPin: -1
         property var inItem: null
 
+
+        function printConnection()
+        {
+            for (var i = 0; i < lines.length; ++i)
+            {
+                console.log(lines[i].item1.name + " -> " + lines[i].item2.name + ": " + lines[i].pin)
+            }
+        }
+
         function addLine(item1, item2, pin)
         {
             for (var i = 0; i < lines.length; ++i)

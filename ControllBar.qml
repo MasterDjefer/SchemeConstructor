@@ -23,7 +23,6 @@ Rectangle
         {
             id: logicalItemsBox
 
-            anchors.horizontalCenter: parent.horizontalCenter
             Layout.fillWidth: true
 
             model: ListModel {
@@ -39,7 +38,6 @@ Rectangle
 
         Button
         {
-            anchors.horizontalCenter: parent.horizontalCenter
             Layout.fillWidth: true
             text: "Add node"
 
@@ -62,6 +60,22 @@ Rectangle
                     var count = mainWindow.countItemByName(logicalItemsBox.currentText)
                     item.name = logicalItemsBox.currentText + (count + 1)
                     mainWindow.logicalItems.push(item)
+                }
+            }
+        }
+
+        Button
+        {
+            Layout.fillWidth: true
+            text: "Show elements"
+
+            MouseArea
+            {
+                anchors.fill: parent
+
+                onClicked:
+                {
+                    canvas.printConnection()
                 }
             }
         }
