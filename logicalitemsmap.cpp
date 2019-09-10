@@ -35,6 +35,26 @@ int LogicalItemsMap::recursion(const LogicalItemsConnection &connection)
         {
             return LogicalFunctions::logicalAnd(RECURSION_CALL(1), RECURSION_CALL(2));
         }
+        else
+        if (checkType(connection.out, "Nand"))
+        {
+            return LogicalFunctions::logicalNand(RECURSION_CALL(1), RECURSION_CALL(2));
+        }
+        else
+        if (checkType(connection.out, "Or"))
+        {
+            return LogicalFunctions::logicalOr(RECURSION_CALL(1), RECURSION_CALL(2));
+        }
+        else
+        if (checkType(connection.out, "Nor"))
+        {
+            return LogicalFunctions::logicalNor(RECURSION_CALL(1), RECURSION_CALL(2));
+        }
+        else
+        if (checkType(connection.out, "Xor"))
+        {
+            return LogicalFunctions::logicalXor(RECURSION_CALL(1), RECURSION_CALL(2));
+        }
     }
 
     return connection.value;

@@ -1,7 +1,6 @@
 #ifndef LOGICALFUNCTIONS_H
 #define LOGICALFUNCTIONS_H
 
-
 namespace LogicalFunctions
 {
     bool logicalNot(bool val);
