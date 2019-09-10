@@ -111,7 +111,8 @@ Window {
             var itemsMap = []
             for (var i = 0; i < lines.length; ++i)
             {
-                itemsMap.push({"out": lines[i].item1.name, "in": lines[i].item2.name, "pin": lines[i].pin, "value": 0});
+                var value = lines[i].item1.name.search("Input") !== -1 ? lines[i].item1.isOn : false
+                itemsMap.push({"out": lines[i].item1.name, "value": value, "in": lines[i].item2.name, "pin": lines[i].pin});
             }
             logicalItemsMap.getLogicalItemsMap(itemsMap) //C++ object's method call
         }
