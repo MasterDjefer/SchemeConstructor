@@ -14,7 +14,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    logicalitemsmap.cpp
+    logicalitemsmap.cpp \
+    logicalitemsconnection.cpp \
+    logicalfunctions.cpp
 
 RESOURCES += qml.qrc \
     images.qrc
@@ -33,4 +35,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    logicalitemsmap.h
+    logicalitemsmap.h \
+    logicalitemsconnection.h \
+    logicalfunctions.h

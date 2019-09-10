@@ -67,7 +67,7 @@ Rectangle
         Button
         {
             Layout.fillWidth: true
-            text: "Show elements"
+            text: "Run"
 
             MouseArea
             {
@@ -75,7 +75,7 @@ Rectangle
 
                 onClicked:
                 {
-                    canvas.printConnection()
+                    canvas.sendConnections()
                 }
             }
         }

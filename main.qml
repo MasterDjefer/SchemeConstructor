@@ -106,13 +106,13 @@ Window {
         property var inItem: null
 
 
-        function printConnection()
+        function sendConnections()
         {
             var itemsMap = []
             for (var i = 0; i < lines.length; ++i)
             {
-                var value = lines[i].item1.name.search("Input") !== -1 ? lines[i].item1.isOn : false
-                itemsMap.push({"out": lines[i].item1.name, "value": value, "in": lines[i].item2.name, "pin": lines[i].pin});
+                var value = lines[i].item1.name.search("Input") !== -1 ? lines[i].item1.isOn : -1
+                itemsMap.push({"out": lines[i].item1.name, "value": value, "in": lines[i].item2.name, "pin": lines[i].pin})
             }
             logicalItemsMap.getLogicalItemsMap(itemsMap) //C++ object's method call
         }
