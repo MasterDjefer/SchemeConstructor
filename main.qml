@@ -4,7 +4,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import Package.LogicalItemsMap 1.0
 
-Window {
+Window
+{
     id: mainWindow
     objectName: "mainWindow"
 
@@ -118,5 +119,19 @@ Window {
     DrawingField
     {
         id: canvas
+    }
+
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        folder: shortcuts.home
+        onAccepted: {
+            console.log("You chose: " + fileDialog.fileUrls)
+//            Qt.quit()
+        }
+        onRejected: {
+            console.log("Canceled")
+//            Qt.quit()
+        }
     }
 }

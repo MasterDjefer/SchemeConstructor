@@ -16,7 +16,8 @@ SOURCES += \
         main.cpp \
     logicalitemsmap.cpp \
     logicalitemsconnection.cpp \
-    logicalfunctions.cpp
+    logicalfunctions.cpp \
+    logicalitemsparser.cpp
 
 RESOURCES += qml.qrc \
     images.qrc
@@ -37,4 +38,5 @@ DISTFILES +=
 HEADERS += \
     logicalitemsmap.h \
     logicalitemsconnection.h \
-    logicalfunctions.h
+    logicalfunctions.h \
+    logicalitemsparser.h

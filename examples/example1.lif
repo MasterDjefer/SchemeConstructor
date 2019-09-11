@@ -1,0 +1,13 @@
+<Not>
+	<name>Not1</name>
+	<value>-1</value>
+	<x>13   <  /x>
+	<y>13</y>
+</Not>
+
+<Output>
+	<name>Output</name>
+	<value>-1</value>
+	<x>105</x>
+	<y>202</y>
+</Output>

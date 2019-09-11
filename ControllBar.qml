@@ -8,7 +8,7 @@ Rectangle
     property int spaceValue: 20
 
     width: mainWindow.width - canvas.width - spaceValue
-    height: width * 0.6
+    height: width * 0.8
     x: canvas.width + spaceValue / 2
     y: spaceValue / 2
 
@@ -60,6 +60,37 @@ Rectangle
                     var count = mainWindow.countItemByName(logicalItemsBox.currentText)
                     item.name = logicalItemsBox.currentText + (count + 1)
                     mainWindow.logicalItems.push(item)
+                }
+            }
+        }
+
+        Button
+        {
+            Layout.fillWidth: true
+            text: "Import"
+
+            MouseArea
+            {
+                anchors.fill: parent
+
+                onClicked:
+                {
+                    fileDialog.open()
+                }
+            }
+        }
+
+        Button
+        {
+            Layout.fillWidth: true
+            text: "Export"
+
+            MouseArea
+            {
+                anchors.fill: parent
+
+                onClicked:
+                {
                 }
             }
         }
