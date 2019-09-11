@@ -15,10 +15,17 @@ void LogicalItemsMap::printConnections()
 void LogicalItemsMap::processConnections()
 {
     int res = 0;
-    int outputIndex = findElement("Output", MapKeys::in, 0);
-    if (outputIndex != -1)
+    if (checkInfiniteLoop())
     {
-        res = startMeasurement(mListConnections.at(outputIndex));
+        res = -1;
+    }
+    else
+    {
+        int outputIndex = findElement("Output", MapKeys::in, 0);
+        if (outputIndex != -1)
+        {
+            res = startMeasurement(mListConnections.at(outputIndex));
+        }
     }
 
     emit endMeasurement(res);
@@ -102,6 +109,22 @@ int LogicalItemsMap::findElement(const QString &name, const QString& type, int p
 bool LogicalItemsMap::checkType(const QString &name, const QString &type)
 {
     return name.indexOf(type) != -1;
+}
+
+bool LogicalItemsMap::checkInfiniteLoop()
+{
+    for (int i = 0; i < mListConnections.size(); ++i)
+    {
+        for (int j = 0; j < mListConnections.size(); ++j)
+        {
+            if (mListConnections.at(i).out == mListConnections.at(j).in && mListConnections.at(i).in == mListConnections.at(j).out)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void LogicalItemsMap::getLogicalItemsMap(const QVariantList &data)

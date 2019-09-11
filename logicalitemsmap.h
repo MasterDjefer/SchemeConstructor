@@ -32,6 +32,7 @@ private:
     int startMeasurement(const LogicalItemsConnection& connection);
     int findElement(const QString& name, const QString& type, int pin);
     bool checkType(const QString& name, const QString& type);
+    bool checkInfiniteLoop();
 
 private:
     QList<LogicalItemsConnection> mListConnections;
