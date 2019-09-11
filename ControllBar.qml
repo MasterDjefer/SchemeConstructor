@@ -63,21 +63,5 @@ Rectangle
                 }
             }
         }
-
-        Button
-        {
-            Layout.fillWidth: true
-            text: "Run"
-
-            MouseArea
-            {
-                anchors.fill: parent
-
-                onClicked:
-                {
-                    canvas.sendConnections()
-                }
-            }
-        }
     }
 }

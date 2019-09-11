@@ -14,46 +14,62 @@ void LogicalItemsMap::printConnections()
 
 void LogicalItemsMap::processConnections()
 {
+    int res = 0;
     int outputIndex = findElement("Output", MapKeys::in, 0);
-    if (outputIndex == -1)
-        return;
+    if (outputIndex != -1)
+    {
+        res = startMeasurement(mListConnections.at(outputIndex));
+    }
 
-    int res = recursion(mListConnections.at(outputIndex));
-    qDebug() << res;
+    emit endMeasurement(res);
 }
 
-int LogicalItemsMap::recursion(const LogicalItemsConnection &connection)
+//need to add checking infinite loop
+int LogicalItemsMap::startMeasurement(const LogicalItemsConnection &connection)
 {
     if (!checkType(connection.out, "Input"))
     {
         if (checkType(connection.out, "Not"))
         {
-            return LogicalFunctions::logicalNot(RECURSION_CALL(0));
+            int indexElement= findElement(connection.out, MapKeys::in, 0);
+            if (indexElement == -1)
+            {
+                return LogicalFunctions::logicalNot(0);
+            }
+
+            return LogicalFunctions::logicalNot(startMeasurement(mListConnections.at(indexElement)));
         }
         else
-        if (checkType(connection.out, "And"))
         {
-            return LogicalFunctions::logicalAnd(RECURSION_CALL(1), RECURSION_CALL(2));
-        }
-        else
-        if (checkType(connection.out, "Nand"))
-        {
-            return LogicalFunctions::logicalNand(RECURSION_CALL(1), RECURSION_CALL(2));
-        }
-        else
-        if (checkType(connection.out, "Or"))
-        {
-            return LogicalFunctions::logicalOr(RECURSION_CALL(1), RECURSION_CALL(2));
-        }
-        else
-        if (checkType(connection.out, "Nor"))
-        {
-            return LogicalFunctions::logicalNor(RECURSION_CALL(1), RECURSION_CALL(2));
-        }
-        else
-        if (checkType(connection.out, "Xor"))
-        {
-            return LogicalFunctions::logicalXor(RECURSION_CALL(1), RECURSION_CALL(2));
+            int indexElement1= findElement(connection.out, MapKeys::in, 1);
+            int indexElement2= findElement(connection.out, MapKeys::in, 2);
+            int val1 = indexElement1 == - 1 ? 0 : startMeasurement(mListConnections.at(indexElement1));
+            int val2 = indexElement2 == - 1 ? 0 : startMeasurement(mListConnections.at(indexElement2));
+
+            if (checkType(connection.out, "And"))
+            {
+                return LogicalFunctions::logicalAnd(val1, val2);
+            }
+            else
+            if (checkType(connection.out, "Nand"))
+            {
+                return LogicalFunctions::logicalNand(val1, val2);
+            }
+            else
+            if (checkType(connection.out, "Or"))
+            {
+                return LogicalFunctions::logicalOr(val1, val2);
+            }
+            else
+            if (checkType(connection.out, "Nor"))
+            {
+                return LogicalFunctions::logicalNor(val1, val2);
+            }
+            else
+            if (checkType(connection.out, "Xor"))
+            {
+                return LogicalFunctions::logicalXor(val1, val2);
+            }
         }
     }
 
@@ -98,8 +114,6 @@ void LogicalItemsMap::getLogicalItemsMap(const QVariantList &data)
         mListConnections.push_back({map.value(MapKeys::out).toString(), map.value(MapKeys::value).toInt(),
                                     map.value(MapKeys::in).toString(), map.value(MapKeys::pin).toInt()});
     }
-
-    printConnections();
     processConnections();
 }
 

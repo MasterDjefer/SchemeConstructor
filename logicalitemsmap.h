@@ -8,7 +8,6 @@
 #include "logicalitemsconnection.h"
 #include "logicalfunctions.h"
 
-#define RECURSION_CALL(pin) recursion(mListConnections.at(findElement(connection.out, MapKeys::in, pin)))
 
 class LogicalItemsMap : public QObject
 {
@@ -30,12 +29,15 @@ public:
 private:
     void printConnections();
     void processConnections();
-    int recursion(const LogicalItemsConnection& connection);
+    int startMeasurement(const LogicalItemsConnection& connection);
     int findElement(const QString& name, const QString& type, int pin);
     bool checkType(const QString& name, const QString& type);
 
 private:
     QList<LogicalItemsConnection> mListConnections;
+
+signals:
+    void endMeasurement(int value);
 };
 
 #endif // LOGICALITEMSMAP_H

@@ -23,5 +23,7 @@ Rectangle
         isConnectable = false
         canvas.setActiveItem(null, null, -1, null)
         canvas.redraw()
+
+        canvas.sendConnections()
     }
 }

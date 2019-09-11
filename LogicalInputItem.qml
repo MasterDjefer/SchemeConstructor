@@ -34,12 +34,11 @@ LogicalBaseItem
             color: "black"
         }
 
-        Image
+        Text
         {
-            source: "qrc:/images/LogicalItems/logicalInput.png"
+            text: "On/Off"
+            font.pixelSize: 18
             anchors.centerIn: parent
-            width: parent.width - parent.border.width * 2
-            height: parent.height - parent.border.width * 2
         }
 
         MouseArea
@@ -49,6 +48,7 @@ LogicalBaseItem
             onClicked:
             {
                 isOn = !isOn
+                canvas.sendConnections()
             }
         }
     }

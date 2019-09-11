@@ -53,6 +53,8 @@ Window {
         item.destroy()
 
         canvas.redraw()
+
+        canvas.sendConnections()
     }
 
     function countItemByName(name)
@@ -81,12 +83,16 @@ Window {
 
     ControllBar
     {
-
     }
 
     LogicalItemsMap
     {
         id: logicalItemsMap
+
+        onEndMeasurement:
+        {
+            logicalItems[0].isOn = Boolean(value) //first element in array - output(with property isOn)
+        }
     }
 
     Canvas
@@ -95,7 +101,6 @@ Window {
         width: mainWindow.width - 200//for sidebar
         height: mainWindow.height
 
-//        anchors.fill: parent
 //        z: 1
 
         property var lines: []
