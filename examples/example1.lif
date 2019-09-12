@@ -1,13 +1,23 @@
-<Not>
-	<name>Not1</name>
-	<value>-1</value>
-	<x>13   <  /x>
-	<y>13</y>
-</Not>
+<Lif>
+	<Items>
+		<Not>
+			<name>Not1</name>
+			<value>-1</value>
+			<x>13   <  /x>
+			<y>13</y>
+		</Not>
 
-<Output>
-	<name>Output</name>
-	<value>-1</value>
-	<x>105</x>
-	<y>202</y>
-</Output>
+		<Output>
+			<name>Output</name>
+			<value>-1</value>
+			<x>105</x>
+			<y>202</y>
+		</Output>
+	</Items>
+
+	<Connections>
+		<Not1>0</Output>
+		<Not1>1</Xor1>
+		<Not1>2</Xor1>
+	</Connections>
+</Lif>

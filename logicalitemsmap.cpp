@@ -139,8 +139,3 @@ void LogicalItemsMap::getLogicalItemsMap(const QVariantList &data)
     }
     processConnections();
 }
-
-const QString LogicalItemsMap::MapKeys::out = "out";
-const QString LogicalItemsMap::MapKeys::in = "in";
-const QString LogicalItemsMap::MapKeys::pin = "pin";
-const QString LogicalItemsMap::MapKeys::value = "value";

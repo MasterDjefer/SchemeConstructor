@@ -10,10 +10,11 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    LogicalItemsParser parser;
-    parser.openFile("");
+//    LogicalItemsParser parser;
+//    parser.openFile("");
 
     qmlRegisterType<LogicalItemsMap>("Package.LogicalItemsMap", 1, 0, "LogicalItemsMap");
+    qmlRegisterType<LogicalItemsParser>("Package.LogicalItemsParser", 1, 0, "LogicalItemsParser");
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

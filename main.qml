@@ -3,6 +3,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import Package.LogicalItemsMap 1.0
+import Package.LogicalItemsParser 1.0
 
 Window
 {
@@ -19,8 +20,6 @@ Window
     title: qsTr("Scheme constructor")
 
     property var logicalItems: []
-
-    signal logicalItemsMap(var data)
 
     Component.onCompleted:
     {
@@ -59,6 +58,48 @@ Window
         canvas.sendConnections()
     }
 
+    function clearField()
+    {
+        canvas.lines = []
+        canvas.redraw()
+
+        for (var i = 0; i < logicalItems.length; ++i)
+        {
+            logicalItems[i].destroy()
+        }
+
+        logicalItems = []
+    }
+
+    function createItems(data)
+    {
+        clearField();
+        for (var i = 0; i < data.length; ++i)
+        {
+            var component = null
+            if (data[i].type === "Input" || data[i].type === "Output" || data[i].type === "Not")
+            {
+                component = Qt.createComponent("Logical" + data[i].type + "Item.qml")
+            }
+            else
+            {
+                component = Qt.createComponent("LogicalTwoPinItem.qml")
+            }
+
+            var item = component.createObject(mainWindow)
+            item.x = data[i].x
+            item.y = data[i].y
+            item.name = data[i].name
+
+            if (item.logicalType === 3)
+            {
+                item.imgPath = "qrc:/images/LogicalItems/logical" + data[i].type + ".png"
+            }
+
+            mainWindow.logicalItems.push(item)
+        }
+    }
+
     function countItemByName(name)
     {
         var count = 0
@@ -72,6 +113,17 @@ Window
         }
 
         return count
+    }
+
+    function findOutput()
+    {
+        for (var i = 0; i < logicalItems.length; ++i)
+        {
+            if (logicalItems[i].name === "Output")
+            {
+                return logicalItems[i]
+            }
+        }
     }
 
     Rectangle
@@ -107,7 +159,7 @@ Window
         {
             if (value >= 0)
             {
-                logicalItems[0].isOn = Boolean(value) //first element in array - output(with property isOn)
+                findOutput().isOn = Boolean(value)
             }
             else
             {
@@ -116,22 +168,32 @@ Window
         }
     }
 
+    LogicalItemsParser
+    {
+        id: logicalItemsParser
+
+        onItemsParsed:
+        {
+            createItems(data)
+        }
+    }
+
     DrawingField
     {
         id: canvas
     }
 
-    FileDialog {
-        id: fileDialog
+    FileDialog
+    {
+        id: openFileDialog
         title: "Please choose a file"
         folder: shortcuts.home
-        onAccepted: {
-            console.log("You chose: " + fileDialog.fileUrls)
-//            Qt.quit()
-        }
-        onRejected: {
-            console.log("Canceled")
-//            Qt.quit()
+//        selectExisting: false
+        nameFilters: "*.lif"
+//        Component.onCompleted: visible = true
+        onAccepted:
+        {
+//            logicalItemsParser.openFile(fileDialog.fileUrl.toString())  //url/urls
         }
     }
 }

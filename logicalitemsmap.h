@@ -8,18 +8,17 @@
 #include "logicalitemsconnection.h"
 #include "logicalfunctions.h"
 
+namespace MapKeys
+{
+    const QString out = "out";
+    const QString in = "in";
+    const QString pin = "pin";
+    const QString value = "value";
+}
 
 class LogicalItemsMap : public QObject
 {
     Q_OBJECT
-
-    struct MapKeys
-    {
-        static const QString out;
-        static const QString in;
-        static const QString pin;
-        static const QString value;
-    };
 
 public:
     Q_INVOKABLE void getLogicalItemsMap(const QVariantList& list);

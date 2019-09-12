@@ -2,69 +2,79 @@
 
 LogicalItemsParser::LogicalItemsParser()
 {
-
 }
 
-void LogicalItemsParser::openFile(const QString &fileName)
+void LogicalItemsParser::openFile(const QVariant& fileName)
 {
-    //path was     file:///home/predator...
-#ifdef _WIN32
-    QString fName = "D:/Project/C/Qt/SchemeConstructor/examples/example1.lif";
-#elif __linux__
-    QString fName = "/home/predator/Programs/Qt/SchemeConstructor/examples/example1.lif";
-#endif
+    QString fileNameStr = fileName.toString();
+    fileNameStr.remove("file:///"); //delete prefix
 
-    QFile file(fName);
+    QFile file(fileNameStr);
     file.open(QFile::ReadOnly | QFile::Text);
 
-
-    mData = file.readAll();
+    QString data = file.readAll();
     file.close();
 
-    cleanData();
-//    qDebug() << mData;
-    parse();
-//    qDebug() << mList;
-    printListItems();
+    cleanData(data);
+    parse(data);
+    convertData();
 }
 
-void LogicalItemsParser::cleanData()
+void LogicalItemsParser::cleanData(QString& data)
 {
-    mData.remove(QRegExp("[ \n\t]"));
+    data.remove(QRegExp("[ \n\t]"));
 }
 
-void LogicalItemsParser::parse()
+void LogicalItemsParser::parse(QString &data)
 {
-    if (mData.isEmpty())
-    {
-        return;
-    }
+    //remove <Lif> attr
+    data.remove(openAttribute(FileAttributes::lif));
+    data.remove(closeAttribute(FileAttributes::lif));
 
-    QString type = mData.mid(mData.indexOf("<") + 1, mData.indexOf(">") - mData.indexOf("<") - 1);
-    mData.remove(0, mData.indexOf(">") + 1);
-    mList.push_back(QMap<QString, QVariant>());
-    mList.back().insert("type", type);
+    int openItemAttrIndex = data.indexOf(openAttribute(FileAttributes::items));
+    int closeItemAttrIndex = data.indexOf(closeAttribute(FileAttributes::items));
+    int openAttrSize = openAttribute(FileAttributes::items).size();
+    int closeAttrSize = openAttrSize + 1;
+
+    mItemsData = data.mid(openItemAttrIndex + openAttrSize, closeItemAttrIndex - openItemAttrIndex - openAttrSize);
+    data.remove(openItemAttrIndex, closeItemAttrIndex + closeAttrSize - openItemAttrIndex);
+
+    parseItems();
+}
+
+void LogicalItemsParser::parseItems()
+{
+    qDebug() << mItemsData;
+    //get type of item(ex. Not, Xor)
+    QString type = mItemsData.mid(mItemsData.indexOf("<") + 1, mItemsData.indexOf(">") - mItemsData.indexOf("<") - 1);
+
+    mItemsData.remove("<" + type + ">");
+
+    //create new map and insert type
+    mItemsList.push_back(QMap<QString, QVariant>());
+    mItemsList.back().insert("type", type);
 
 
     while (true)
     {
-        QString attr;
-        attr = mData.mid(mData.indexOf("<") + 1, mData.indexOf(">") - mData.indexOf("<") - 1);
+        QString attr = mItemsData.mid(mItemsData.indexOf("<") + 1, mItemsData.indexOf(">") - mItemsData.indexOf("<") - 1);
 
         if (attr == "/" + type)
         {
-            mData.remove(0, mData.indexOf(">") + 1);
-            parse();
+            mItemsData.remove(0, mItemsData.indexOf(">") + 1);
+            if (!mItemsData.isEmpty())
+            {
+                parseItems();
+            }
             return;
         }
 
+        mItemsData.remove(0, mItemsData.indexOf(">") + 1);
 
-        mData.remove(0, mData.indexOf(">") + 1);
-
-        QString attrValue = mData.left(mData.indexOf("<"));
-        bool ok;
+        QString attrValue = mItemsData.left(mItemsData.indexOf("<"));
+        bool ok = false;
         int res = attrValue.toInt(&ok);
-        QVariant variant;
+        QVariant variant = 0;
         if (ok)
         {
             variant = res;
@@ -74,39 +84,44 @@ void LogicalItemsParser::parse()
             variant = attrValue;
         }
 
-        mList.back().insert(attr, variant);
-        mData.remove(0, mData.indexOf("<"));
+        mItemsList.back().insert(attr, variant);
+        mItemsData.remove(0, mItemsData.indexOf("<"));
 
-        QString finAttr;
-        finAttr = mData.mid(mData.indexOf("<") + 1, mData.indexOf(">") - mData.indexOf("<") - 1);
-        mData.remove(0, mData.indexOf(">") + 1);
-
-//        qDebug() << mData;
-
-
-
-
-
-//        if (attr == "/" + attr)
-//        {
-//            continue;
-//        }
-
-
-
+        //delete attribute end
+        mItemsData.remove(0, mItemsData.indexOf(">") + 1);
+        qDebug() << mItemsData;
     }
-//    qDebug() << type;
-    //    qDebug() << mData;
 }
 
 void LogicalItemsParser::printListItems()
 {
-    for (int i = 0; i < mList.size(); ++i)
+    for (int i = 0; i < mItemsList.size(); ++i)
     {
         qDebug() << "~~~~~~~~~~~~~~~~~~~~~~~";
-        for(auto e : mList.at(i).keys())
+        for(auto e : mItemsList.at(i).keys())
         {
-            qDebug() << e << mList.at(i).value(e);
+            qDebug() << e << mItemsList.at(i).value(e);
         }
     }
+}
+
+void LogicalItemsParser::convertData()
+{
+    QList<QVariant> list;
+    for (int i = 0; i < mItemsList.size(); ++i)
+    {
+        list.push_back(mItemsList.at(i));
+    }
+
+    emit itemsParsed(QVariant(list));
+}
+
+QString LogicalItemsParser::openAttribute(const QString &attribute)
+{
+    return "<" + attribute + ">";
+}
+
+QString LogicalItemsParser::closeAttribute(const QString &attribute)
+{
+    return "</" + attribute + ">";
 }

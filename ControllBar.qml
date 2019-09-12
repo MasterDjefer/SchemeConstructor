@@ -52,7 +52,7 @@ Rectangle
                                 component = Qt.createComponent("LogicalTwoPinItem.qml")
                     var item = component.createObject(mainWindow)
 
-                    if (logicalItemsBox.currentIndex > 1)
+                    if (item.logicalType === 3)
                     {
                         item.imgPath = "qrc:/images/LogicalItems/logical" + logicalItemsBox.currentText + ".png"
                     }
@@ -75,7 +75,11 @@ Rectangle
 
                 onClicked:
                 {
-                    fileDialog.open()
+                    //    QString fName = "D:/Projects/C/Qt/SchemeConstructor/examples/example1.lif";
+                    //#elif __linux__
+                    //    QString fName = "/home/predator/Programs/Qt/SchemeConstructor/examples/example1.lif";
+                    logicalItemsParser.openFile("D:/Projects/C/Qt/SchemeConstructor/examples/example1.lif")
+//                    openFileDialog.open()
                 }
             }
         }
