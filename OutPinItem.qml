@@ -23,7 +23,6 @@ BasePinItem
         {
             isConnectable = true
             canvas.setActiveItem(father, mouseArea, 0)
-
         }
         onReleased:
         {

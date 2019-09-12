@@ -13,11 +13,18 @@
 			<x>105</x>
 			<y>202</y>
 		</Output>
+		
+		<Xor>
+			<name>Xor1</name>
+			<value>-1</value>
+			<x>300</x>
+			<y>202</y>
+		</Xor>
 	</Items>
 
 	<Connections>
-		<Not1>0</Output>
 		<Not1>1</Xor1>
 		<Not1>2</Xor1>
+		<Xor1>0</Output>
 	</Connections>
 </Lif>

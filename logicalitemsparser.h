@@ -26,14 +26,18 @@ private:
     void cleanData(QString& data);
     void parse(QString& data);
     void parseItems();
+    void parseConnections();
     void printListItems();
+    void printListConnections();
     void convertData();
     QString openAttribute(const QString& attribute);
     QString closeAttribute(const QString& attribute);
 
 private:
     QList<QMap<QString, QVariant> > mItemsList;
+    QList<QMap<QString, QVariant> > mConnectionsList;
     QString mItemsData;
+    QString mConnectionsData;
 
 signals:
     void itemsParsed(const QVariant& data);

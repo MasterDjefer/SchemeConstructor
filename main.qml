@@ -100,6 +100,32 @@ Window
         }
     }
 
+    function findItemByName(name)
+    {
+        for (var i = 0; i < logicalItems.length; ++i)
+        {
+            if (logicalItems[i].name === name)
+            {
+                return logicalItems[i]
+            }
+        }
+    }
+
+    function createConnections(data)
+    {
+        for (var i = 0; i < data.length; ++i)
+        {
+            var item1 = findItemByName(data[i].item1)
+            var item2 = findItemByName(data[i].item2)
+            var pin = data[i].pin
+
+            canvas.lines.push({"item1": item1, "item2": item2, "pin": pin})
+            item2.pinConnect[pin](true)
+        }
+        canvas.redraw()
+        canvas.sendConnections()
+    }
+
     function countItemByName(name)
     {
         var count = 0
@@ -115,16 +141,6 @@ Window
         return count
     }
 
-    function findOutput()
-    {
-        for (var i = 0; i < logicalItems.length; ++i)
-        {
-            if (logicalItems[i].name === "Output")
-            {
-                return logicalItems[i]
-            }
-        }
-    }
 
     Rectangle
     {
@@ -159,7 +175,7 @@ Window
         {
             if (value >= 0)
             {
-                findOutput().isOn = Boolean(value)
+                findItemByName("Output").isOn = Boolean(value)
             }
             else
             {
@@ -175,6 +191,10 @@ Window
         onItemsParsed:
         {
             createItems(data)
+        }
+        onConnectionsParsed:
+        {
+            createConnections(data)
         }
     }
 
