@@ -20,6 +20,42 @@ void LogicalItemsParser::openFile(const QVariant& fileName)
     convertData();
 }
 
+void LogicalItemsParser::saveFile(const QVariant &items, const QVariant &connections)
+{
+    mOutputData = "";
+
+    QList<QVariant> list = items.toList();
+
+    for (int i = 0; i < list.size(); ++i)
+    {
+        QMap<QString, QVariant> map = list.at(i).toMap();
+
+        qDebug() << map.value(ItemAttributes::type);
+        mOutputData += openAttribute(map.value(ItemAttributes::type).toString()); //mOutputData += "\n\t\t\t";
+
+        QMap<QString, QVariant> subMap = map.value(ItemAttributes::data).toMap();
+
+        for(auto e : subMap.keys())
+        {
+            mOutputData += openAttribute(subMap.value(ItemAttributes::type).toString()); //mOutputData += "\n\t\t\t";
+        }
+
+        mOutputData += closeAttribute(map.value(ItemAttributes::type).toString()); //mOutputData += "\n\t\t";
+    }
+
+    qDebug() << mOutputData;
+    return;
+
+    mOutputData = openAttribute(FileAttributes::lif); mOutputData += "\n\t";
+    mOutputData += openAttribute(FileAttributes::items); mOutputData += "\n\t\t";
+
+
+
+    //add connections
+    mOutputData += closeAttribute(FileAttributes::items); mOutputData += "\n";
+    mOutputData += closeAttribute(FileAttributes::lif); mOutputData += "\n";
+}
+
 void LogicalItemsParser::cleanData(QString& data)
 {
     data.remove(QRegExp("[ \n\t]"));

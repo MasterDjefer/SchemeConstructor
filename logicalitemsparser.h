@@ -13,6 +13,16 @@ namespace FileAttributes
     const QString connections = "Connections";
 }
 
+namespace ItemAttributes
+{
+    const QString type = "type";
+    const QString data = "data";
+    const QString name = "name";
+    const QString value = "value";
+    const QString x = "x";
+    const QString y = "y";
+}
+
 class LogicalItemsParser : public QObject
 {
     Q_OBJECT
@@ -21,6 +31,7 @@ public:
     LogicalItemsParser();
 
     Q_INVOKABLE void openFile(const QVariant& fileName);
+    Q_INVOKABLE void saveFile(const QVariant& items, const QVariant& connections);
 
 private:
     void cleanData(QString& data);
@@ -38,6 +49,8 @@ private:
     QList<QMap<QString, QVariant> > mConnectionsList;
     QString mItemsData;
     QString mConnectionsData;
+
+    QString mOutputData;
 
 signals:
     void itemsParsed(const QVariant& data);

@@ -95,6 +95,7 @@ Rectangle
 
                 onClicked:
                 {
+                    mainWindow.saveFileData()
                 }
             }
         }

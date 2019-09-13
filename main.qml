@@ -21,6 +21,7 @@ Window
 
     property var logicalItems: []
 
+    //create output(which cant delete)
     Component.onCompleted:
     {
         var component = Qt.createComponent("LogicalOutputItem.qml")
@@ -30,6 +31,7 @@ Window
         logicalItems.push(item)
     }
 
+    //on X mark pressed
     function destroyItem(item)
     {
         for (var i = 0; i < canvas.lines.length;)
@@ -58,6 +60,7 @@ Window
         canvas.sendConnections()
     }
 
+    //call when import form file
     function clearField()
     {
         canvas.lines = []
@@ -71,6 +74,7 @@ Window
         logicalItems = []
     }
 
+    //create items from file
     function createItems(data)
     {
         clearField();
@@ -90,6 +94,9 @@ Window
             item.x = data[i].x
             item.y = data[i].y
             item.name = data[i].name
+
+            if (data[i].type === "Input")
+                item.isOn = data[i].value
 
             if (item.logicalType === 3)
             {
@@ -111,6 +118,7 @@ Window
         }
     }
 
+    //create lines from file
     function createConnections(data)
     {
         for (var i = 0; i < data.length; ++i)
@@ -139,6 +147,39 @@ Window
         }
 
         return count
+    }
+
+    function saveFileData()
+    {
+        var items = []
+        for (var i = 0; i < logicalItems.length; ++i)
+        {
+            var type = typeByName(logicalItems[i].name)
+
+            var obj = {"name": logicalItems[i].name, "x": logicalItems[i].x, "y": logicalItems[i].y}
+            if (type === "Input")
+            {
+                obj["value"] = Number(logicalItems[i].isOn)
+            }
+
+            items.push({"type": typeByName(logicalItems[i].name), "data": obj})
+        }
+
+        console.log(items[0].type, items[0].data.name, items[0].data.x, items[0].data.y)
+
+        logicalItemsParser.saveFile(items, [])
+    }
+
+    function typeByName(name)
+    {
+        for (var i = 0; i < name.length; ++i)
+        {
+            if (name[i].charCodeAt(0) >= 48 && name[i].charCodeAt(0) <= 57)
+            {
+                return name.slice(0, i)
+            }
+        }
+        return name
     }
 
 
