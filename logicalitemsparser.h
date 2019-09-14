@@ -5,12 +5,14 @@
 #include <QFile>
 #include <QDebug>
 #include <QMap>
+#include <fstream>
 
 namespace FileAttributes
 {
     const QString lif = "Lif";
     const QString items = "Items";
     const QString connections = "Connections";
+    const QString extension = ".lif";
 }
 
 namespace ItemAttributes
@@ -21,6 +23,10 @@ namespace ItemAttributes
     const QString value = "value";
     const QString x = "x";
     const QString y = "y";
+
+    const QString item1 = "item1";
+    const QString item2 = "item2";
+    const QString pin = "pin";
 }
 
 class LogicalItemsParser : public QObject
@@ -31,7 +37,7 @@ public:
     LogicalItemsParser();
 
     Q_INVOKABLE void openFile(const QVariant& fileName);
-    Q_INVOKABLE void saveFile(const QVariant& items, const QVariant& connections);
+    Q_INVOKABLE void saveFile(const QVariant& fileName, const QVariant& items, const QVariant& connections);
 
 private:
     void cleanData(QString& data);

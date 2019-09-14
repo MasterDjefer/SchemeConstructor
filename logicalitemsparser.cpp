@@ -20,40 +20,69 @@ void LogicalItemsParser::openFile(const QVariant& fileName)
     convertData();
 }
 
-void LogicalItemsParser::saveFile(const QVariant &items, const QVariant &connections)
+void LogicalItemsParser::saveFile(const QVariant& fileName, const QVariant &items, const QVariant &connections)
 {
     mOutputData = "";
 
-    QList<QVariant> list = items.toList();
+    mOutputData += openAttribute(FileAttributes::lif); mOutputData += "\n\t";
+    mOutputData += openAttribute(FileAttributes::items); mOutputData += "\n\t\t";
 
-    for (int i = 0; i < list.size(); ++i)
+    QList<QVariant> itemsList = items.toList();
+    for (int i = 0; i < itemsList.size(); ++i)
     {
-        QMap<QString, QVariant> map = list.at(i).toMap();
+        QMap<QString, QVariant> map = itemsList .at(i).toMap();
 
-        qDebug() << map.value(ItemAttributes::type);
-        mOutputData += openAttribute(map.value(ItemAttributes::type).toString()); //mOutputData += "\n\t\t\t";
+        mOutputData += openAttribute(map.value(ItemAttributes::type).toString()); mOutputData += "\n\t\t\t";
 
         QMap<QString, QVariant> subMap = map.value(ItemAttributes::data).toMap();
 
         for(auto e : subMap.keys())
         {
-            mOutputData += openAttribute(subMap.value(ItemAttributes::type).toString()); //mOutputData += "\n\t\t\t";
+            mOutputData += openAttribute(e);
+            mOutputData += subMap.value(e).toString();
+            mOutputData += closeAttribute(e);
+            mOutputData += "\n\t\t\t";
         }
 
-        mOutputData += closeAttribute(map.value(ItemAttributes::type).toString()); //mOutputData += "\n\t\t";
+        mOutputData += "\n\t\t";
+        mOutputData += closeAttribute(map.value(ItemAttributes::type).toString()); mOutputData += "\n\t\t";
     }
 
-    qDebug() << mOutputData;
-    return;
+    mOutputData += "\n\t";
+    mOutputData += closeAttribute(FileAttributes::items); mOutputData += "\n\t";
 
-    mOutputData = openAttribute(FileAttributes::lif); mOutputData += "\n\t";
-    mOutputData += openAttribute(FileAttributes::items); mOutputData += "\n\t\t";
 
 
 
     //add connections
-    mOutputData += closeAttribute(FileAttributes::items); mOutputData += "\n";
+    mOutputData += openAttribute(FileAttributes::connections); mOutputData += "\n\t\t";
+
+
+    QList<QVariant> connectionsList = connections.toList();
+    for (int i = 0; i < connectionsList.size(); ++i)
+    {
+        QMap<QString, QVariant> map = connectionsList.at(i).toMap();
+
+        mOutputData += openAttribute(map.value(ItemAttributes::item1).toString());
+        mOutputData += map.value(ItemAttributes::pin).toString();
+        mOutputData += closeAttribute(map.value(ItemAttributes::item2).toString());
+        mOutputData += "\n\t\t";
+    }
+
+    mOutputData += "\n\t";
+    mOutputData += closeAttribute(FileAttributes::connections); mOutputData += "\n";
     mOutputData += closeAttribute(FileAttributes::lif); mOutputData += "\n";
+
+
+
+    QString fileNameStr = fileName.toString() + FileAttributes::extension;
+    fileNameStr.remove("file://"); //delete prefix
+
+    QFile file(fileNameStr);
+    file.open(QFile::WriteOnly | QFile::Text);
+
+    file.write(mOutputData.toStdString().c_str());
+    file.close();
 }
 
 void LogicalItemsParser::cleanData(QString& data)

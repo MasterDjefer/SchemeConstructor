@@ -149,7 +149,7 @@ Window
         return count
     }
 
-    function saveFileData()
+    function itemsToFile()
     {
         var items = []
         for (var i = 0; i < logicalItems.length; ++i)
@@ -165,9 +165,18 @@ Window
             items.push({"type": typeByName(logicalItems[i].name), "data": obj})
         }
 
-        console.log(items[0].type, items[0].data.name, items[0].data.x, items[0].data.y)
+        return items
+    }
 
-        logicalItemsParser.saveFile(items, [])
+    function connectionsToFile()
+    {
+        var connections = []
+        for (var i = 0; i < canvas.lines.length; ++i)
+        {
+            connections.push({"item1": canvas.lines[i].item1.name, "item2": canvas.lines[i].item2.name, "pin": canvas.lines[i].pin})
+        }
+
+        return connections
     }
 
     function typeByName(name)
@@ -255,6 +264,20 @@ Window
         onAccepted:
         {
 //            logicalItemsParser.openFile(fileDialog.fileUrl.toString())  //url/urls
+        }
+    }
+
+    FileDialog
+    {
+        id: saveFileDialog
+        title: "Write name of a file"
+        folder: shortcuts.home
+        selectExisting: false
+        nameFilters: "*.lif"
+//        Component.onCompleted: visible = true
+        onAccepted:
+        {
+            logicalItemsParser.saveFile(saveFileDialog.fileUrl.toString(), itemsToFile(), connectionsToFile())
         }
     }
 }
