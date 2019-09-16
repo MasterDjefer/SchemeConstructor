@@ -7,10 +7,16 @@ LogicalItemsParser::LogicalItemsParser()
 void LogicalItemsParser::openFile(const QVariant& fileName)
 {
     QString fileNameStr = fileName.toString();
-    fileNameStr.remove("file:///"); //delete prefix
+    fileNameStr.remove("file://"); //delete prefix
 
     QFile file(fileNameStr);
     file.open(QFile::ReadOnly | QFile::Text);
+
+    if (!file.isOpen())
+    {
+        qDebug() << "cant open " + fileNameStr;
+        return;
+    }
 
     QString data = file.readAll();
     file.close();
@@ -52,11 +58,8 @@ void LogicalItemsParser::saveFile(const QVariant& fileName, const QVariant &item
     mOutputData += closeAttribute(FileAttributes::items); mOutputData += "\n\t";
 
 
-
-
     //add connections
     mOutputData += openAttribute(FileAttributes::connections); mOutputData += "\n\t\t";
-
 
     QList<QVariant> connectionsList = connections.toList();
     for (int i = 0; i < connectionsList.size(); ++i)
@@ -74,12 +77,17 @@ void LogicalItemsParser::saveFile(const QVariant& fileName, const QVariant &item
     mOutputData += closeAttribute(FileAttributes::lif); mOutputData += "\n";
 
 
-
     QString fileNameStr = fileName.toString() + FileAttributes::extension;
     fileNameStr.remove("file://"); //delete prefix
 
     QFile file(fileNameStr);
     file.open(QFile::WriteOnly | QFile::Text);
+
+    if (!file.isOpen())
+    {
+        qDebug() << "cant open " + fileNameStr;
+        return;
+    }
 
     file.write(mOutputData.toStdString().c_str());
     file.close();
@@ -100,7 +108,8 @@ void LogicalItemsParser::parse(QString &data)
     int closeItemAttrIndex = data.indexOf(closeAttribute(FileAttributes::items));
     int openItemAttrSize = openAttribute(FileAttributes::items).size();
 
-    mItemsData = data.mid(openItemAttrIndex + openItemAttrSize, closeItemAttrIndex - openItemAttrIndex - openItemAttrSize);
+    mItemsData = data.mid(openItemAttrIndex + openItemAttrSize, closeItemAttrIndex - openItemAttrIndex - openItemAttrSize);    
+    mItemsList.clear();
     parseItems();
 
     int openConnectionAttrIndex = data.indexOf(openAttribute(FileAttributes::connections));
@@ -108,6 +117,7 @@ void LogicalItemsParser::parse(QString &data)
     int openConnectionAttrSize = openAttribute(FileAttributes::connections).size();
 
     mConnectionsData = data.mid(openConnectionAttrIndex + openConnectionAttrSize, closeConnectionAttrIndex - openConnectionAttrIndex - openConnectionAttrSize);
+    mConnectionsList.clear();
     parseConnections();
 }
 

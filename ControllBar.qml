@@ -75,12 +75,7 @@ Rectangle
 
                 onClicked:
                 {
-                    //    QString fName = "D:/Projects/C/Qt/SchemeConstructor/examples/example1.lif";
-                    //#elif __linux__
-                    //    QString fName = "/home/predator/Programs/Qt/SchemeConstructor/examples/example1.lif";
-//                    logicalItemsParser.openFile("D:/Projects/C/Qt/SchemeConstructor/examples/example1.lif")
-                    logicalItemsParser.openFile("/home/predator/Programs/Qt/SchemeConstructor/examples/example1.lif")
-//                    openFileDialog.open()
+                    openFileDialog.open()
                 }
             }
         }
@@ -97,7 +92,6 @@ Rectangle
                 onClicked:
                 {
                     saveFileDialog.open()
-//                    mainWindow.saveFileData()
                 }
             }
         }

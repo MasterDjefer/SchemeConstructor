@@ -1,0 +1,67 @@
+<Lif>
+	<Items>
+		<Input>
+			<name>Input1</name>
+			<value>0</value>
+			<x>0</x>
+			<y>272</y>
+			
+		</Input>
+		<Not>
+			<name>Not1</name>
+			<x>237</x>
+			<y>77</y>
+			
+		</Not>
+		<Output>
+			<name>Output</name>
+			<x>700</x>
+			<y>321</y>
+			
+		</Output>
+		<Xor>
+			<name>Xor1</name>
+			<x>531</x>
+			<y>242</y>
+			
+		</Xor>
+		<Input>
+			<name>Input2</name>
+			<value>1</value>
+			<x>0</x>
+			<y>58</y>
+			
+		</Input>
+		<Input>
+			<name>Input3</name>
+			<value>1</value>
+			<x>0</x>
+			<y>464</y>
+			
+		</Input>
+		<Nand>
+			<name>Nand1</name>
+			<x>187</x>
+			<y>208</y>
+			
+		</Nand>
+		<And>
+			<name>And1</name>
+			<x>328</x>
+			<y>343</y>
+			
+		</And>
+		
+	</Items>
+	<Connections>
+		<Not1>1</Xor1>
+		<Xor1>0</Output>
+		<Input2>0</Not1>
+		<Input1>2</Nand1>
+		<Input2>1</Nand1>
+		<Nand1>1</And1>
+		<Input3>2</And1>
+		<And1>2</Xor1>
+		
+	</Connections>
+</Lif>

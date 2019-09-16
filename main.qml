@@ -70,7 +70,6 @@ Window
         {
             logicalItems[i].destroy()
         }
-
         logicalItems = []
     }
 
@@ -258,12 +257,10 @@ Window
         id: openFileDialog
         title: "Please choose a file"
         folder: shortcuts.home
-//        selectExisting: false
         nameFilters: "*.lif"
-//        Component.onCompleted: visible = true
         onAccepted:
         {
-//            logicalItemsParser.openFile(fileDialog.fileUrl.toString())  //url/urls
+            logicalItemsParser.openFile(openFileDialog.fileUrl.toString())
         }
     }
 
@@ -273,8 +270,7 @@ Window
         title: "Write name of a file"
         folder: shortcuts.home
         selectExisting: false
-        nameFilters: "*.lif"
-//        Component.onCompleted: visible = true
+
         onAccepted:
         {
             logicalItemsParser.saveFile(saveFileDialog.fileUrl.toString(), itemsToFile(), connectionsToFile())
